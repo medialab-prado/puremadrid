@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_calaire"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/abc_text_size_medium_material"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:textColor="@color/pure_black"
+                    />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/link_calaire"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/link_urbano_soria_text"
+                    android:textColor="@color/pure_white"
+                    android:layout_gravity="center"
+                    android:elevation="10dp"
+                    android:background="@color/colorAccent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/blue"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/link_google_play_rateus"
+                android:layout_gravity="center"
+                android:textSize="@dimen/abc_text_size_medium_material"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textColor="@color/pure_black"
+                />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/link_google_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/link_googleplay_rateus_text"
+                android:textColor="@color/pure_white"
+                android:drawableLeft="@drawable/googleplay_icon"
+                android:layout_gravity="center"
+                android:elevation="10dp"
+                android:background="@color/colorAccent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:drawablePadding="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/siguenos_en_facebook"
+                android:layout_gravity="center"
+                android:textSize="@dimen/abc_text_size_medium_material"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textColor="@color/pure_black"
+                />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/link_facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/link_facebook"
+                android:textColor="@color/pure_white"
+                android:gravity="center"
+                android:drawableLeft="@drawable/facebook_white"
+                android:layout_gravity="center"
+                android:elevation="10dp"
+                android:background="@color/colorAccent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/blue"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
+                />
+
+            <TextView
+                android:id="@+id/text_app_disenada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_disenada_por"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icono_disenado_por"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:gravity="center"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icono_prediction_disenado_por"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_marginBottom="10dp"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <View
+        android:id="@+id/shadow_view"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="@drawable/toolbar_shadow" />
+
+</RelativeLayout>

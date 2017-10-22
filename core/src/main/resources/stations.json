@@ -1,0 +1,170 @@
+[
+   {
+      "nombre":"PLAZA ESPAÑA",
+      "id":"4",
+      "latitud_decimal":"40.423852",
+      "longitud_decimal":"-3.712246",
+      "zona": 1
+   },
+   {
+      "nombre":"ESCUELAS AGUIRRE",
+      "id":"8",
+      "latitud_decimal":"40.421562",
+      "longitud_decimal":"-3.682319",
+      "zona": 1
+   },
+   {
+      "nombre":"AVDA. RAMON Y CAJAL",
+      "id":"11",
+      "latitud_decimal":"40.451473",
+      "longitud_decimal":"-3.677356",
+      "zona": 1
+   },
+   {
+      "nombre":"ARTURO SORIA",
+      "id":"16",
+      "latitud_decimal":"40.440046",
+      "longitud_decimal":"-3.639233",
+      "zona": 3
+   },
+   {
+      "nombre":"VILLAVERDE",
+      "id":"17",
+      "latitud_decimal":"40.347133",
+      "longitud_decimal":"-3.713324",
+      "zona": 5
+   },
+   {
+      "nombre":"FAROLILLO",
+      "id":"18",
+      "latitud_decimal":"40.394777",
+      "longitud_decimal":"-3.731833",
+      "zona": 5
+   },
+   {
+      "nombre":"CASA DE CAMPO",
+      "id":"24",
+      "latitud_decimal":"40.419352",
+      "longitud_decimal":"-3.747346",
+      "zona": 4
+   },
+   {
+      "nombre":"BARAJAS PUEBLO",
+      "id":"27",
+      "latitud_decimal":"40.476924",
+      "longitud_decimal":"-3.580029",
+      "zona": 3
+   },
+   {
+      "nombre":"PLAZA DEL CARMEN",
+      "id":"35",
+      "latitud_decimal":"40.419208",
+      "longitud_decimal":"-3.703171",
+      "zona": 1
+   },
+   {
+      "nombre":"MORATALAZ",
+      "id":"36",
+      "latitud_decimal":"40.407944",
+      "longitud_decimal":"-3.645305",
+      "zona": 2
+   },
+   {
+      "nombre":"CUATRO CAMINOS",
+      "id":"38",
+      "latitud_decimal":"40.445542",
+      "longitud_decimal":"-3.707129",
+      "zona": 1
+   },
+   {
+      "nombre":"BARRIO DEL PILAR",
+      "id":"39",
+      "latitud_decimal":"40.478227",
+      "longitud_decimal":"-3.711541",
+      "zona": 1
+   },
+   {
+      "nombre":"PUENTE DE VALLECAS",
+      "id":"40",
+      "latitud_decimal":"40.388151",
+      "longitud_decimal":"-3.651521",
+      "zona": 2
+   },
+   {
+      "nombre":"MENDEZ ALVARO",
+      "id":"47",
+      "latitud_decimal":"40.398111",
+      "longitud_decimal":"-3.686825",
+      "zona": 1
+   },
+   {
+      "nombre":"CASTELLANA",
+      "id":"48",
+      "latitud_decimal":"40.439891",
+      "longitud_decimal":"-3.690366",
+      "zona": 1
+   },
+   {
+      "nombre":"RETIRO",
+      "id":"49",
+      "latitud_decimal":"40.415277",
+      "longitud_decimal":"-3.682583",
+      "zona": 1
+   },
+   {
+      "nombre":"PLAZA DE CASTILLA",
+      "id":"50",
+      "latitud_decimal":"40.465565",
+      "longitud_decimal":"-3.688769",
+      "zona": 1
+   },
+   {
+      "nombre":"ENSANCHE DE VALLECAS",
+      "id":"54",
+      "latitud_decimal":"40.372944",
+      "longitud_decimal":"-3.612138",
+      "zona": 2
+   },
+   {
+      "nombre":"URB. EMBAJADA",
+      "id":"55",
+      "latitud_decimal":"40.462527",
+      "longitud_decimal":"-3.580746",
+      "zona": 3
+   },
+   {
+      "nombre":"FERNANDEZ LADREDA",
+      "id":"56",
+      "latitud_decimal":"40.384961",
+      "longitud_decimal":"-3.718727",
+      "zona": 5
+   },
+   {
+      "nombre":"SANCHINARRO",
+      "id":"57",
+      "latitud_decimal":"40.494205",
+      "longitud_decimal":"-3.660505",
+      "zona": 3
+   },
+   {
+      "nombre":"EL PARDO",
+      "id":"58",
+      "latitud_decimal":"40.518055",
+      "longitud_decimal":"-3.774611",
+      "zona": 4
+   },
+   {
+      "nombre":"JUAN CARLOS I",
+      "id":"59",
+      "latitud_decimal":"40.465222",
+      "longitud_decimal":"-3.609083",
+      "zona": 3
+   },
+   {
+      "nombre":"TRES OLIVOS",
+      "id":"60",
+      "latitud_decimal":"40.500555",
+      "longitud_decimal":"-3.689760",
+      "zona": 3
+   }
+]

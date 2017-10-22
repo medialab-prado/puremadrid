@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 26
+        versionCode 1030
+        versionName "1.0.3"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        applicationId "com.albaitdevs.puremadrid"
+        setProperty("archivesBaseName", "phone-release-$versionCode")
+
+    }
+
+    buildTypes {
+
+        debug{
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationIdSuffix ".testing"
+        }
+
+    }
+}
+
+ext {
+    //Version
+    playServicesVersion = '11.0.4'
+}
+
+dependencies {
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+    compile(project(path: ':api', configuration: 'android-endpoints')) {
+        exclude group: 'com.google.guava'
+    }
+    compile(project(':core')) {
+        exclude group: 'org.json', module: 'json'
+        exclude group: 'com.google.guava'
+    }
+    compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
+    compile 'com.android.support:appcompat-v7:26.0.0'
+    compile 'com.android.support:cardview-v7:26.0.0'
+    compile 'com.android.support:design:26.0.0'
+    compile "com.google.android.gms:play-services-maps:${playServicesVersion}"
+    compile "com.google.android.gms:play-services-location:${playServicesVersion}"
+    compile "com.google.firebase:firebase-messaging:${playServicesVersion}"
+
+    compile 'com.firebase:firebase-jobdispatcher:0.8.3'
+
+    compile 'com.jakewharton:butterknife:8.4.0'
+
+    compile('com.google.api-client:google-api-client:1.23.0') {
+        exclude module: 'httpclient'
+    }
+    compile('com.google.api-client:google-api-client-android:1.23.0') {
+        exclude module: 'httpclient'
+    }
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+}
+
+configurations {
+    all*.exclude group: 'org.apache.commons'
+}
+
+apply plugin: 'com.google.gms.google-services'

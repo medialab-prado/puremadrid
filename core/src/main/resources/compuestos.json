@@ -1,0 +1,18 @@
+[
+  {
+    "id":7,
+    "nombre":"Monóxido de Nitrógeno ",
+    "nombre_corto":"NO",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Quimioluminiscencia",
+    "tecnica_medida_id": 8
+  },
+  {
+    "id":8,
+    "nombre":"Dióxido de Nitrógeno ",
+    "nombre_corto":"NO2",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Quimioluminiscencia",
+    "tecnica_medida_id": 8
+  }
+]

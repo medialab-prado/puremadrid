@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/api/getNewData</url>
+    <description>Load Air Data every 60 minutes</description>
+    <schedule>every 1 hours from 00:20 to 23:40</schedule>
+	<timezone>Europe/Madrid</timezone>
+	<retry-parameters>
+		<job-age-limit>50m</job-age-limit>
+		<min-backoff-seconds>120</min-backoff-seconds>
+		<max-backoff-seconds>120</max-backoff-seconds>
+		<max-doublings>5</max-doublings>
+	</retry-parameters>
+  </cron>
+  
+</cronentries>

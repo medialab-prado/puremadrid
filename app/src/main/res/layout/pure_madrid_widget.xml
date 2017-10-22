@@ -1,0 +1,64 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/widget_margin">
+
+    <LinearLayout
+        android:id="@+id/appwidget_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/appwidget_header_view"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_weight="1"
+            android:text="@string/app_name"
+            android:textStyle="bold|italic"
+            android:textColor="@color/pure_white"
+            android:background="@color/colorPrimaryDark"
+            android:layout_gravity="center"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/appwidget_today_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/loading"
+            android:textSize="14sp"
+            android:textStyle="bold|italic"
+            />
+
+        <TextView
+            android:id="@+id/appwidget_tomorrow_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/loading"
+            android:textSize="14sp"
+            android:textStyle="bold|italic"
+            />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/appwidget_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/skyline_item"
+        android:layout_alignBottom="@+id/appwidget_root"
+        />
+
+</RelativeLayout>

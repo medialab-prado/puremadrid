@@ -1,0 +1,127 @@
+<resources>
+
+    <string name="app_name">Pure Madrid</string>
+
+    <!--PERMISSIONS HANDLING-->
+    <string name="permission_ratioanale_snack">Se necesitan permisos para mostrar tu ubicación</string>
+    <string name="permission_snack_ok">Permitir</string>
+
+    <!--GOOGLE PLAY SERVICES HANDLING-->
+    <string name="google_play_services_error_message">Es necesario habilitar los Servicios de Google Play para poder utilizar todas las funciones de la aplicación</string>
+    <string name="install">Habilitar</string>
+    <string name="update_dialog_ahorano">Ahora no</string>
+
+    <!--NEW VERSION HANDLING-->
+    <string name="update_dialog_message">Hay una actualización de la aplicación disponible. ¿Quieres descargarla ahora?\n\nLas novedades que incluye son:</string>
+    <string name="update_dialog_title">Nueva versión disponible</string>
+    <string name="update_dialog_iragoogleplay">Actualizar</string>
+
+    <!--SHARE-->
+    <string name="text_share_app"><![CDATA[Consulta en tiempo real los avisos por contaminación en tu móvil: https://play.google.com/store/apps/details?id=com.albaitdevs.puremadrid&amp;referrer=utm_source%3Dinsideapp_rateus%26anid%3Dadmob]]></string>
+    <string name="puremadrid_play_url">https://play.google.com/store/apps/details?id=com.albaitdevs.puremadrid</string>
+
+    <!--MENUITEMS-->
+    <string name="menuitem_info">Información</string>
+    <string name="menuitem_estado">Estado</string>
+    <string name="menuitem_mapa">Mapa</string>
+    <string name="menuitem_last_announcement">Boletín diario</string>
+    <string name="menuitem_prediction">Predicción</string>
+    <string name="menuitem_protocolos">Protocolos</string>
+    <string name="menuitem_feedback">Sugerencias</string>
+
+    <!--DRAWER_ITEMS-->
+    <string name="close_drawer_action">Cerrar</string>
+    <string name="open_drawer_action">Abrir</string>
+
+    <!--CONTENT DESCRIPTIONS-->
+    <string name="contentdesc_madrid_skyline">Madrid Skyline</string>
+    <string name="contentdesc_item_background">Item Background</string>
+
+    <!--WORDS-->
+    <string name="menu">Menú</string>
+    <string name="share">Compartir</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="avisos_title">Avisos</string>
+    <string name="escenarios_title">Escenarios</string>
+
+    <!--TEXTS SCENARIOS-->
+    <string name="scenario_activaded_today_is">Hoy está activado el escenario</string>
+    <string name="scenario_activaded_tomorrow_is">Mañana estará activado el escenario</string>
+    <string name="scenario_activaded_today_is_noti">Debido a la contaminación registrada actualmente en la ciudad, hoy están activadas las restricciones de tráfico del escenario</string>
+    <string name="scenario_activaded_tomorrow_is_noti">Debido a la contaminación registrada actualmente en la ciudad, mañana estarán activadas las restricciones de tráfico del escenario</string>
+    <string name="scenario_none_title">No hay avisos</string>
+    <string name="scenario0_tomorrow_title">No existen avisos o restricciones de tráfico para mañana</string>
+    <string name="scenario0_today_title">No existen avisos o restricciones de tráfico para hoy</string>
+    <string name="scenario1_title">ESCENARIO 1</string>
+    <string name="scenario2_title">ESCENARIO 2</string>
+    <string name="scenario3_title">ESCENARIO 3</string>
+    <string name="scenario4_title">ESCENARIO 4</string>
+    <string name="scenario1_title_lower">Escenario 1</string>
+    <string name="scenario2_title_lower">Escenario 2</string>
+    <string name="scenario3_title_lower">Escenario 3</string>
+    <string name="scenario4_title_lower">Escenario 4</string>
+
+    <!--BUTTONS-->
+    <string name="goto_map">Ir al mapa</string>
+
+    <!--EXPLANATION SCENARIOS-->
+    <string name="scenario_none_content">Cuando haya avisos activados para hoy o para mañana, lo verás en la pantalla principal</string>
+    <string name="scenario1_content">Se activa con 1 día con superación del nivel de preaviso\n\nACTUACIONES:\n\n* Medidas Informativas 1\n* Reducción de la velocidad a 70 km/h en la M‐30  y accesos\n* Medidas de Promoción del Transporte Público</string>
+    <string name="scenario2_content">Se activa con 2 días consecutivos con superación del nivel de preaviso ó 1 día con superación del nivel de aviso\n\nACTUACIONES:\n\n* Medidas Informativas 1 y 2\n* Reducción de la velocidad a 70 km/h en la M‐30  y accesos\n* Prohibición del estacionamiento de vehículos en las plazas y horario del Servicio de Estacionamiento Regulado (SER) en el interior de la M‐30\n* Medidas de Promoción del Transporte Público</string>
+    <string name="scenario3_content" formatted="false">Se activa con 2 días consecutivos con superación del nivel de aviso\n\nACTUACIONES:\n\n* Medidas Informativas 1 y 2\n* Reducción de la velocidad a 70 km/h en la M‐30  y accesos\n* Prohibición del estacionamiento de vehículos en las plazas y horario del SER en el interior de la M‐30\n* Restricción de la circulación en el interior de la almendra central (área interior de la M‐30) del 50% de todos los vehículos\n* Medidas de Promoción del Transporte Público\n* Se recomienda la no circulación de taxis libres, excepto Ecotaxis y Eurotaxis, en el interior de la almendra central (área interior de la M‐30), pudiendo estos vehículos estacionar en las plazas azules del SER, además de en sus paradas habituales, a la espera de viajeros</string>
+    <string name="scenario4_content" formatted="false">Se activa con 3 días consecutivos de nivel de aviso o 1 día de nivel de alerta\n\nACTUACIONES:\n\n* Medidas Informativas 1 y 2\n* Reducción de la velocidad a 70 km/h en la M‐30  y accesos\n* Prohibición del estacionamiento de vehículos en las plazas y horario del SER en el interior de la M‐30\n* Restricción de la circulación en el interior de la almendra central (área interior de la M‐30) del 50% de todos los vehículos\n* Restricción de la circulación por la M‐30 del 50% de todos los vehículos\n* Restricción de la circulación de taxis libres, excepto Ecotaxis y Eurotaxis, en el interior de la almendra central (área interior de la M‐30)\n* Medidas de Promoción del Transporte Público</string>
+
+    <!--EXPLANATIONS AVISOS-->
+    <string name="preaviso_content">PREAVISO: : Cuando en dos estaciones cualesquiera de una misma zona se superan los 180 microgramos/m3 durante dos horas consecutivas</string>
+    <string name="aviso_content">AVISO: Cuando en dos estaciones cualesquiera de una misma zona se superan los 200 microgramos/m3 durante dos horas consecutivas.</string>
+    <string name="alerta_content">ALERTA: Cuando en tres estaciones cualesquiera de una misma zona (o dos si se trata de la zona 4) se superan los 400 microgramos/m3 durante tres horas consecutivas.</string>
+
+
+    <string name="official_docs">Documentación oficial</string>
+    <string name="no_data_title">No hay datos</string>
+    <string name="no_data_content">Conéctate a internet para empezar a recibir información</string>
+    <string name="retry">Reintentar</string>
+    <string name="particle_no2">NO2</string>
+    <string name="no_data_for_date">No hay datos para la fecha seleccionada</string>
+    <string name="loading">Cargando</string>
+    <string name="add_widget">Add widget</string>
+    <string name="manana">Mañana</string>
+    <string name="hoy">Hoy</string>
+    <string name="choose_date">Elegir fecha</string>
+    <string name="scenario_deactivated_message">Se han desactivado todos los escenarios por contaminación</string>
+    <string name="scenario_deactivated_title_today">Escenarios para hoy desactivados</string>
+    <string name="scenario_deactivated_title_tomorrow">Escenarios para mañana desactivados</string>
+    <string name="activado_hoy">activado hoy</string>
+    <string name="activado_manana">activado mañana</string>
+    <string name="need_permission_title">Se necesitan permisos</string>
+    <string name="need_permission_location_message">Para poder ubicarte en el mapa se necesita el permiso de ubicación</string>
+    <string name="need_permission_storage_message">Para poder descargar el documento se necesitan permisos de escritura</string>
+    <string name="pdf_not_downloaded">No se ha descargado el archivo</string>
+    <string name="not_showing_location">No se mostrará su ubicación</string>
+    <string name="give_permission">Dar permiso</string>
+    <string name="downloading">Descargando...</string>
+    <string name="link_calaire_url">http://www.mambiente.munimadrid.es/opencms/opencms/calaire</string>
+    <string name="feedback_email">mailto:albaitdevs+puremadrid@gmail.com</string>
+    <string name="feedback_subject">[Pure Madrid] Sugerencias</string>
+    <string name="word_feedback">Enviar sugerencia:</string>
+    <string name="feedback_explanation">Remítenos tus sugerencias utilizando el siguiente formulario:</string>
+    <string name="link_googleplay_rateus_url"><![CDATA[https://play.google.com/store/apps/details?id=com.albaitdevs.puremadrid&amp;referrer=utm_source%3Dinsideapp_rateus%26anid%3Dadmob]]></string>
+    <string name="link_facebook_url">https://www.facebook.com/Pure-Madrid-337864229970387/</string>
+    <string name="info_calaire">La información de esta aplicación ha sido obtenida del portal de calidad del aire del Ayuntamiento de Madrid</string>
+    <string name="link_urbano_soria_text">Portal de calidad del Aire</string>
+    <string name="siguenos_en_facebook">Síguenos en facebook</string>
+    <string name="link_googleplay_rateus_text">Google Play</string>
+    <string name="link_google_play_rateus">Busca actualizaciones y valóranos en Google Play:</string>
+    <string name="link_facebook">Pure Madrid</string>
+    <string name="base_prediction_url">http://www.mambiente.munimadrid.es/sica/datos/M</string>
+    <string name="prediction_today">La predicción para el día</string>
+    <string name="predicion_text_start">La predicción para el día</string>
+    <string name="icono_disenado_por">Icono diseñado por Hector Rodríguez</string>
+    <string name="icono_prediction_disenado_por">Icono \"predicción\" diseñado por <a href="https://thenounproject.com/kozinn/">Nikita Kozin</a></string>
+    <string name="app_disenada_por">App diseñada por <a href="https://www.linkedin.com/in/javierdelgadoaylagas/">Javier Delgado</a></string>
+    <string name="loading_data">Cargando datos...</string>
+    <string name="scenario_deactivated_message_tomorrow">A partir de mañana quedan desactivados todos los escenarios</string>
+
+
+</resources>

@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/toolbar_share"
+        android:checked="true"
+        android:icon="@drawable/menu_icon_share"
+        android:title="@string/share"
+        android:onClick="shareApp"
+        app:showAsAction="always"
+        />
+
+</menu>

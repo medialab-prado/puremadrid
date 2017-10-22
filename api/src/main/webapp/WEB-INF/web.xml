@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
+    <servlet>
+        <servlet-name>SystemServiceServlet</servlet-name>
+        <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
+        <init-param>
+            <param-name>services</param-name>
+            <param-value>com.puremadrid.api.PureMadridApi</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SystemServiceServlet</servlet-name>
+        <url-pattern>/_ah/spi/*</url-pattern>
+    </servlet-mapping>
+
+	 <servlet>
+        <servlet-name>GetNewData</servlet-name>
+        <servlet-class>com.puremadrid.api.services.GetNewData</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetNewData</servlet-name>
+        <url-pattern>/api/getNewData</url-pattern>
+    </servlet-mapping>
+	
+	<servlet>
+        <servlet-name>SetManualScenario</servlet-name>
+        <servlet-class>com.puremadrid.api.services.SetManualScenario</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SetManualScenario</servlet-name>
+        <url-pattern>/api/setManualScenario/*</url-pattern>
+    </servlet-mapping>
+
+	<servlet>
+        <servlet-name>SetManualScenarioToday</servlet-name>
+        <servlet-class>com.puremadrid.api.services.SetManualScenarioToday</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SetManualScenarioToday</servlet-name>
+        <url-pattern>/api/setManualScenarioToday/*</url-pattern>
+    </servlet-mapping>
+	
+</web-app>

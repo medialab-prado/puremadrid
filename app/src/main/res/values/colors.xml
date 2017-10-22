@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/blue</color>
+    <color name="colorPrimaryDark">@color/blue_dark</color>
+    <color name="colorAccent">#FF9100</color>
+
+    <color name="blue">#4FC3F7</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="orange">#FF9800</color>
+    <color name="red">#F44336</color>
+    <color name="blue_dark">#039BE5</color>
+    <color name="yellow_dark">#FBC02D</color>
+    <color name="orange_dark">#F57C00</color>
+    <color name="red_dark">#D32F2F</color>
+
+    <color name="drawer_default_color">#fff3f3f3</color>
+
+    <color name="pure_black" type="color">#000000</color>
+    <color name="alpha_black" type="color">#DD000000</color>
+    <color name="pure_transparent" type="color">#00FFFFFF</color>
+    <color name="pure_white" type="color">#FFFFFF</color>
+
+</resources>
