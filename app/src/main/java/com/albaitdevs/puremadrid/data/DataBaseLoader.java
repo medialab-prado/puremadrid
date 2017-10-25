@@ -9,7 +9,9 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.puremadrid.api.pureMadridApi.model.ApiMedicion;
+import com.puremadrid.api.pureMadridApi.model.Calendar;
 import com.puremadrid.api.pureMadridApi.model.JsonMap;
+import com.puremadrid.core.model.Compuesto;
 import com.puremadrid.core.model.Station;
 import com.puremadrid.core.utils.GlobalUtils;
 
@@ -65,7 +67,6 @@ public class DataBaseLoader implements LoaderManager.LoaderCallbacks<Cursor>{
             medicion.setAviso(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_LEVEL_NOW)));
             medicion.setAvisoMaxToday(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_MAX_LEVEL_TODAY)));
             medicion.setAvisoState(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_STATE)));
-            medicion.setCompuesto(cursor.getString(cursor.getColumnIndex(COLUMN_PARTICLE)));
             medicion.setEscenarioManualTomorrow(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_MANUAL_TOMORROW)));
             medicion.setEscenarioStateTomorrow(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_TOMORROW)));
             medicion.setEscenarioStateToday(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_TODAY)));
@@ -77,9 +78,10 @@ public class DataBaseLoader implements LoaderManager.LoaderCallbacks<Cursor>{
 
             try {
                 date = formatter.parse(dateString);
-                medicion.setMeasuredAt(date.getTime());
+                Calendar calendar = new Calendar();
+                calendar.setTimeInMillis(date.getTime());
             } catch (ParseException e) {
-                medicion.setMeasuredAt(0L);
+
             }
 
             // Add stations
@@ -90,8 +92,17 @@ public class DataBaseLoader implements LoaderManager.LoaderCallbacks<Cursor>{
                 int value = cursor.getInt(cursor.getColumnIndex(stationId));
                 valuesMap.put(stationId,value);
             }
-            medicion.setNo2(valuesMap);
 
+            switch (Compuesto.withName(cursor.getString(cursor.getColumnIndex(COLUMN_PARTICLE)))){
+                case NO2: medicion.setNo2(valuesMap); break;
+                case CO: medicion.setCoValues(valuesMap); break;
+                case SO2: medicion.setSo2values(valuesMap); break;
+                case O3: medicion.setO3values(valuesMap); break;
+                case TOL: medicion.setTolValues(valuesMap); break;
+                case BEN: medicion.setBenValues(valuesMap); break;
+                case PM2_5: medicion.setPm25values(valuesMap); break;
+                case PM10: medicion.setPm10values(valuesMap); break;
+            }
         }
         mCallbacks.onDBFinished(medicion);
         cursor.close();

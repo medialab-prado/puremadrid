@@ -94,13 +94,11 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
         contentValues.put(PureMadridContract.PollutionEntry.COLUMN_AVISO_LEVEL_NOW, result.getAviso());
         contentValues.put(PureMadridContract.PollutionEntry.COLUMN_AVISO_MAX_LEVEL_TODAY, result.getAvisoMaxToday());
         contentValues.put(PureMadridContract.PollutionEntry.COLUMN_AVISO_STATE, result.getAvisoState());
-        String particle =  result.getCompuesto();
-        if (particle == null){
-            // If info is not returned by the Api, set default
-            particle = "NO2";
+        if (result.getEscenarioManualTomorrow() != null) {
+            contentValues.put(PureMadridContract.PollutionEntry.COLUMN_SCENARIO_MANUAL_TOMORROW, result.getEscenarioManualTomorrow());
+        } else {
+            contentValues.put(PureMadridContract.PollutionEntry.COLUMN_SCENARIO_MANUAL_TOMORROW, "null");
         }
-        contentValues.put(PureMadridContract.PollutionEntry.COLUMN_PARTICLE, particle);
-        contentValues.put(PureMadridContract.PollutionEntry.COLUMN_SCENARIO_MANUAL_TOMORROW, result.getEscenarioManualTomorrow());
         contentValues.put(PureMadridContract.PollutionEntry.COLUMN_SCENARIO_TOMORROW, result.getEscenarioStateTomorrow());
         contentValues.put(PureMadridContract.PollutionEntry.COLUMN_SCENARIO_TODAY, result.getEscenarioStateToday());
 
@@ -128,6 +126,9 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
             contentValues.put(PureMadridContract.PollutionEntry.COLUMN_BASE_STATION + String.format("%02d", station.getId()), stationValue);
         }
 
+        String particle = "NO2";
+        contentValues.put(PureMadridContract.PollutionEntry.COLUMN_PARTICLE, particle);
+
         // Delete
         context.getContentResolver().insert(PureMadridContract.PollutionEntry.CONTENT_URI, contentValues);
     }
@@ -145,7 +146,6 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
             medicion.setAviso(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_LEVEL_NOW)));
             medicion.setAvisoMaxToday(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_MAX_LEVEL_TODAY)));
             medicion.setAvisoState(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_STATE)));
-            medicion.setCompuesto(cursor.getString(cursor.getColumnIndex(COLUMN_PARTICLE)));
             medicion.setEscenarioManualTomorrow(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_MANUAL_TOMORROW)));
             medicion.setEscenarioStateTomorrow(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_TOMORROW)));
             medicion.setEscenarioStateToday(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_TODAY)));
@@ -156,9 +156,11 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
             Date date = null;
             try {
                 date = formatter.parse(dateString);
-                medicion.setMeasuredAt(date.getTime());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                medicion.setMeasuredAt(calendar.getTimeInMillis());
             } catch (ParseException e) {
-                medicion.setMeasuredAt(0L);
+
             }
 
             // Add stations

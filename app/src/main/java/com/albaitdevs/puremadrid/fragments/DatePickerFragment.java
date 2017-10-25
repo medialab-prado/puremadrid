@@ -102,8 +102,8 @@ public class DatePickerFragment extends DialogFragment
     public long getMinDate() {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("CET"));
         calendar.set(Calendar.YEAR,2017);
-        calendar.set(Calendar.MONTH,Calendar.JANUARY);
-        calendar.set(Calendar.DATE,1);
+        calendar.set(Calendar.MONTH,Calendar.OCTOBER);
+        calendar.set(Calendar.DATE,26);
         return calendar.getTimeInMillis();
     }
 
