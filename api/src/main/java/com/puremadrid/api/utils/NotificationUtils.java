@@ -2,6 +2,7 @@ package com.puremadrid.api.utils;
 
 import com.puremadrid.core.model.Compuesto;
 import com.puremadrid.api.services.GetNewData;
+import com.puremadrid.core.model.NotificationBody;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,7 +37,7 @@ public class NotificationUtils {
         // Si STATE es alguno de debug, es numero de estaciones en warning
         // Si es REAL, entonces es el nivel del escenario
 
-        Compuesto.NotificationBody body = new Compuesto.NotificationBody( "date", warningEstado, currentEstado, validEstado, maxEstado, escenarioToday, escenarioTomorrow, to, service);
+        NotificationBody body = new NotificationBody( "date", warningEstado, currentEstado, validEstado, maxEstado, escenarioToday, escenarioTomorrow, to, service);
         mLogger.info("Sending notification: " + body.buildJson().toString());
 
         try {

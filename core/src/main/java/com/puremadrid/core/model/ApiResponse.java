@@ -21,7 +21,8 @@ public class ApiResponse {
         ERROR_INSECURE(7,MESSAGE_INSECURE),
         ERROR_PREDICTION_DOES_NOT_EXIST(8,MESSAGE_PREDICTION_DOES_NOT_EXIST),
         ERROR_SENDING_EMAIL(8,MESSAGE_ERROR_SENDING_EMAIL),
-        ERROR_WRONG_PARAMETER(9, MESSAGE_WRONG_PARAMETER);
+        ERROR_WRONG_PARAMETER(9, MESSAGE_WRONG_PARAMETER),
+        ERROR_NO_RESULTS(10, MESSAGE_NO_RESULTS);
 
         private int error_code;
         private String message;
@@ -75,6 +76,7 @@ public class ApiResponse {
     public static final String MESSAGE_ERROR_SENDING_EMAIL = "There was an error sending the email";
     public static final String MESSAGE_WRONG_PARAMETER = "Wrong parameter";
     public static final String MESSAGE_EDITED_CORRECTLY = "Edited correctly";
+    public static final String MESSAGE_NO_RESULTS = "No results found";
 
 
     // ======= FIELDS

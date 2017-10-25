@@ -1,5 +1,21 @@
 [
   {
+    "id":1,
+    "nombre":"Dióxido de Azufre",
+    "nombre_corto":"SO2",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Fluorescencia ultravioleta",
+    "tecnica_medida_id": 38
+  },
+  {
+    "id":6,
+    "nombre":"Monóxido de Carbono",
+    "nombre_corto":"CO",
+    "magnitud":"mg/m3",
+    "tecnica_medida":"Absorción infrarroja",
+    "tecnica_medida_id": 48
+  },
+  {
     "id":7,
     "nombre":"Monóxido de Nitrógeno ",
     "nombre_corto":"NO",
@@ -14,5 +30,118 @@
     "magnitud":"µg/m3",
     "tecnica_medida":"Quimioluminiscencia",
     "tecnica_medida_id": 8
+  },
+  {
+    "id":9,
+    "nombre":"Partículas < 2.5 µm",
+    "nombre_corto":"PM2.5",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Microbalanza",
+    "tecnica_medida_id": 47
+  },
+  {
+    "id":10,
+    "nombre":"Partículas < 10 µm",
+    "nombre_corto":"PM10",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Microbalanza",
+    "tecnica_medida_id": 47
+  },
+  {
+    "id":12,
+    "nombre":"Óxidos de Nitrógeno",
+    "nombre_corto":"NOx",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Quimioluminiscencia",
+    "tecnica_medida_id": 8
+  },
+  {
+    "id":14,
+    "nombre":"Ozono",
+    "nombre_corto":"O3",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Absorción ultravioleta",
+    "tecnica_medida_id": 6
+  },
+  {
+    "id":20,
+    "nombre":"Tolueno",
+    "nombre_corto":"TOL",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Cromatografía de gases",
+    "tecnica_medida_id": 59
+  },
+  {
+    "id":30,
+    "nombre":"Benceno",
+    "nombre_corto":"BEN",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Cromatografía de gases",
+    "tecnica_medida_id": 59
+  },
+  {
+    "id":35,
+    "nombre":"Etilbenceno",
+    "nombre_corto":"EBE",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Cromatografía de gases",
+    "tecnica_medida_id": 59
+  },
+  {
+    "id":37,
+    "nombre":"Metaxileno",
+    "nombre_corto":"MXY",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Cromatografía de gases",
+    "tecnica_medida_id": 59
+  },
+  {
+    "id":38,
+    "nombre":"Paraxileno",
+    "nombre_corto":"PXY",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Cromatografía de gases",
+    "tecnica_medida_id": 59
+  },
+  {
+    "id":39,
+    "nombre":"Ortoxileno",
+    "nombre_corto":"OXY",
+    "magnitud":"µg/m3",
+    "tecnica_medida":"Cromatografía de gases",
+    "tecnica_medida_id": 59
+  },
+  {
+    "id":42,
+    "nombre":"Hidrocarburos totales",
+    "nombre_corto":"TCH",
+    "magnitud":"mg/m3",
+    "tecnica_medida":"Ionización de llama",
+    "tecnica_medida_id": 2
+  },
+  {
+    "id":43,
+    "nombre":"Metano",
+    "nombre_corto":"CH4",
+    "magnitud":"mg/m3",
+    "tecnica_medida":"Ionización de llama",
+    "tecnica_medida_id": 2
+  },
+  {
+    "id":44,
+    "nombre":"Hidrocarburos no metálicos",
+    "nombre_corto":"NMHC",
+    "magnitud":"mg/m3",
+    "tecnica_medida":"Ionización de llama",
+    "tecnica_medida_id": 2
   }
+
+
+
+
+
+
+
+
+
 ]

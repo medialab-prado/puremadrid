@@ -3,60 +3,76 @@ package com.puremadrid.core.model;
 import com.google.gson.Gson;
 import com.puremadrid.core.model.ApiResponse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Delga on 15/11/2016.
  */
 
 public enum Compuesto{
-   SO2,
-   CO,
-   NO,
-   NO2,
-   PM2_5,
-   PM10,
-   NOX,
-   O3,
-   TOL,
-   BEN,
-   EBE,
-   MXY,
-   PXY,
-   OXY,
-   TCH,
-   NMHC;
+   SO2(1),
+   CO(6),
+   NO(7),
+   NO2(8),
+   PM2_5(9),
+   PM10(10),
+   NOX(12),
+   O3(14),
+   TOL(20),
+   BEN(30),
+   EBE(35),
+   MXY(37),
+   PXY(38),
+   OXY(39),
+   TCH(42),
+   CH4(43),
+   NMHC(44);
 
-    /**
-     * Created by Delga on 10/12/2016.
-     */
+    private final int id;
 
-    public static class NotificationBody {
+    Compuesto(int id) {
+        this.id = id;
+    }
 
-        public enum Version{
-            PUREMADRID_PROD,
-            ADMIN
+    public int getId() {
+        return id;
+    }
+
+    public static List<Compuesto> measuredCompuestos() {
+        return new ArrayList<Compuesto>(){{
+            add(Compuesto.CO);
+            add(Compuesto.BEN);
+            add(Compuesto.PM2_5);
+            add(Compuesto.PM10);
+            add(Compuesto.TOL);
+            add(Compuesto.NO2);
+            add(Compuesto.O3);
+            add(Compuesto.SO2);
+        }};
+    }
+
+    public static boolean isMeasureUsed(int measuredParameter) {
+        Compuesto compuesto = Compuesto.withId(measuredParameter);
+        return measuredCompuestos().contains(compuesto);
+    }
+
+    public static Compuesto withId(int propertyCompuesto) {
+        for (Compuesto compuesto : Compuesto.values()){
+            if (compuesto.getId() == propertyCompuesto){
+                return compuesto;
+            }
         }
+        return null;
+    }
 
-        public final ApiResponse.NotificationData data;
-        private final String to;
-
-        public NotificationBody(String date, boolean warningStatus, String currentStatus, String validStatus, String maxStatus,  String escenarioToday, String escenarioTomorrow, String to, String flags) {
-            this.data = new ApiResponse.NotificationData(date, warningStatus, currentStatus, validStatus, maxStatus, escenarioToday, escenarioTomorrow, flags);
-            this.to = to;
+    public static Compuesto withName(String propertyCompuesto) {
+        for (Compuesto compuesto : measuredCompuestos()){
+            if (compuesto.name().equals(propertyCompuesto)){
+                return compuesto;
+            }
         }
-
-        public String buildJson() {
-            Gson gson = new Gson();
-            return gson.toJson(this);
-        }
-
-        public ApiResponse.NotificationData getData() {
-            return data;
-        }
-
-        public String getTo() {
-            return to;
-        }
-
+        return null;
     }
 
 }

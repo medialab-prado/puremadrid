@@ -13,12 +13,8 @@ import java.util.Map;
 
 public class Medicion extends ApiMedicion implements Comparable<Medicion>{
 
-    /**
-     * Format: (Calendar, "estacion_XX) -> value
-     */
-    private Table<Calendar,String,Integer> unProcessedData = HashBasedTable.create();
 
-    public Medicion(Date measuredAt, String currentState, String avisoState, String avisoMaxToday, String escenarioToday, String escenarioTomorrow, String escenarioTomorrowManual, boolean isPureMadrid, Map<String,Integer> measures) {
+    public Medicion(Date measuredAt, String currentState, String avisoState, String avisoMaxToday, String escenarioToday, String escenarioTomorrow, String escenarioTomorrowManual, boolean isPureMadrid, Map<String,Object> measures) {
         this(measuredAt,currentState,avisoState,avisoMaxToday,escenarioToday,escenarioTomorrow,escenarioTomorrowManual, isPureMadrid);
         if (measures != null){
             no2values = measures;
@@ -34,21 +30,10 @@ public class Medicion extends ApiMedicion implements Comparable<Medicion>{
         super(isPureMadrid);
     }
 
-    public Calendar getMeasuredAtAsCalendar() {
-        return measuredAt;
-    }
-
-
-    public int compareDate(Medicion other) {
-        return getMeasuredAtAsCalendar().compareTo(other.getMeasuredAtAsCalendar());
-    }
-
     @Override
     public int compareTo(Medicion other) {
-        return compareDate(other);
+        Long result = getMeasuredAt() - other.getMeasuredAt();
+        return result.intValue();
     }
 
-    public void setUnprocessedData(Table<Calendar, String, Integer> data) {
-        unProcessedData = data;
-    }
 }

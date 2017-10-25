@@ -4,6 +4,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.gson.Gson;
 import com.puremadrid.api.utils.EmailUtils;
+import com.puremadrid.core.model.Compuesto;
 import com.puremadrid.core.model.Medicion;
 import com.puremadrid.core.model.Station;
 import com.puremadrid.core.utils.GlobalUtils;
@@ -26,6 +27,7 @@ import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import static com.puremadrid.api.MainServlet.isPureMadrid;
+import static com.puremadrid.core.model.Compuesto.*;
 
 /**
  * Created by jdelgado on 15/11/2016.
@@ -55,8 +57,16 @@ public class Parser {
 
         //TABLE MAP: HORA, ESTACION, VALOR
         String line;
-        Map<String,Table<Calendar,String,Integer>> valueArray = new HashMap<>();
-        Table<Calendar,String,Integer> tableMap = HashBasedTable.create();
+        Table<Calendar,String,Object> tableNO2 = HashBasedTable.create();
+        Table<Calendar,String,Object> tableSO2 = HashBasedTable.create();
+        Table<Calendar,String,Object> tableCO = HashBasedTable.create();
+        Table<Calendar,String,Object> tableO3 = HashBasedTable.create();
+        Table<Calendar,String,Object> tableTOL = HashBasedTable.create();
+
+        Table<Calendar,String,Object> tableBEN = HashBasedTable.create();
+        Table<Calendar,String,Object> tablePM25 = HashBasedTable.create();
+        Table<Calendar,String,Object> tablePM10 = HashBasedTable.create();
+
         while ((line = in.readLine()) != null) {
 
             StringTokenizer tokenizer = new StringTokenizer(line, ",");
@@ -68,10 +78,10 @@ public class Parser {
             int measuredParameter = Integer.parseInt(tokenizer.nextToken());
             int measuredTechnique = Integer.parseInt(tokenizer.nextToken());
 
-            //Evaluar solo NO2
-            if (measuredParameter != 8) {
+            if (!isMeasureUsed(measuredParameter)){
                 continue;
             }
+
             //
             int periodo = Integer.parseInt(tokenizer.nextToken()); // Si es 4 es diario
             // FECHA REAL
@@ -81,7 +91,7 @@ public class Parser {
             //
             for (int i = 1; i <= 24; i++) {
 
-                int value = Integer.parseInt(tokenizer.nextToken()); // Valor del elemento medido
+                Number value = parseValue(measuredParameter, tokenizer.nextToken());
                 boolean valid = tokenizer.nextToken().equals("V"); // V o N, valido o no
                 if (valid) {
                     Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("CET"));
@@ -98,7 +108,34 @@ public class Parser {
 //                    mLogger.info("Hora analizada: " + dateFormat.format(currentCalendar.getTime()));
                     if (currentCalendar.getTimeInMillis() > lastValidMeasure.getTimeInMillis()) {
 //                        mLogger.info("Insertando");
-                        tableMap.put(currentCalendar, "estacion_" + GlobalUtils.intTwoDigits(stationNumber), value);
+                        Compuesto compuesto = Compuesto.withId(measuredParameter);
+                        switch (compuesto){
+                            case NO2:
+                                tableNO2.put(currentCalendar, "estacion_" + GlobalUtils.intTwoDigits(stationNumber), value);
+                                break;
+                            case PM2_5:
+                                tablePM25.put(currentCalendar, "estacion_" + GlobalUtils.intTwoDigits(stationNumber), value);
+                                break;
+                            case PM10:
+                                tablePM10.put(currentCalendar, "estacion_" + GlobalUtils.intTwoDigits(stationNumber), value);
+                                break;
+                            case O3:
+                                tableO3.put(currentCalendar, "estacion_" + GlobalUtils.intTwoDigits(stationNumber), value);
+                                break;
+                            case CO:
+                                tableCO.put(currentCalendar, "estacion_" + GlobalUtils.intTwoDigits(stationNumber), value);
+                                break;
+                            case SO2:
+                                tableSO2.put(currentCalendar, "estacion_" + GlobalUtils.intTwoDigits(stationNumber), value);
+                                break;
+                            case TOL:
+                                tableTOL.put(currentCalendar, "estacion_" + GlobalUtils.intTwoDigits(stationNumber), value);
+                                break;
+                            case BEN:
+                                tableBEN.put(currentCalendar, "estacion_" + GlobalUtils.intTwoDigits(stationNumber), value);
+                                break;
+
+                        }
                     } else {
 //                        mLogger.info("NO nsertando");
                         // continue
@@ -108,8 +145,31 @@ public class Parser {
                 }
             }
         }
-        List<Medicion> mediciones = formatData(tableMap, 8); // ONLY NO2
+        List<Medicion> mediciones = formatData(
+                tableNO2, tableSO2, tableCO, tableO3,
+                tableTOL, tableBEN, tablePM25, tablePM10);
         return mediciones;
+    }
+
+
+
+    private static Number parseValue(int measuredParameter, String readValue) {
+        Compuesto compuesto = Compuesto.withId(measuredParameter);
+        switch (compuesto) {
+            case NO2:
+            case PM2_5:
+            case PM10:
+            case SO2:
+            case O3:
+                int intValue = Integer.parseInt(readValue);
+                return intValue;
+            case CO:
+            case TOL:
+            case BEN:
+                float floatValue = Float.parseFloat(readValue);
+                return floatValue;
+        }
+        return -1;
     }
 
     public static List<Medicion> parseFromMissingDay(BufferedReader in) throws IOException, ParseException {
@@ -126,7 +186,7 @@ public class Parser {
 
         in.readLine(); // Linea vacia, keep format
         //
-        Table<Calendar, String, Integer> tableMap = HashBasedTable.create();
+        Table<Calendar, String, Object> tableMap = HashBasedTable.create();
         Station[] stations = new Gson().fromJson(GlobalUtils.getString(GlobalUtils.getInputStream("stations.json")), Station[].class);
         int itemNumber = 0;
         String line = null;
@@ -155,29 +215,46 @@ public class Parser {
             itemNumber++;
         }
 
-        List<Medicion> formattedData = formatData(tableMap, 8); // ONLY NO2
+        List<Medicion> formattedData = formatData(tableMap, null, null, null, null, null, null, null); // ONLY NO2
         return formattedData;
     }
 
 
 
 
-    private static List<Medicion> formatData(Table<Calendar, String, Integer> tableMap, int compuesto) {
+    private static List<Medicion> formatData(
+            Table<Calendar, String, Object> tableNO2,
+            Table<Calendar, String, Object> tableSO2,
+            Table<Calendar, String, Object> tableCO,
+            Table<Calendar, String, Object> tableO3,
+            Table<Calendar, String, Object> tableTOL,
+            Table<Calendar, String, Object> tableBEN,
+            Table<Calendar, String, Object> tablePM25,
+            Table<Calendar, String, Object> tablePM10) {
+
         List<Medicion> mediciones = new ArrayList<>();
         //
 
         Calendar savedTime = Calendar.getInstance(TimeZone.getTimeZone("CET"));
-        for(Calendar row : tableMap.rowKeySet()) {
+        for(int i = 0 ; i < tableNO2.rowKeySet().size(); i++) {
+
+            List<Calendar> listNO2 = new ArrayList<>(tableNO2.rowKeySet());
+            Calendar time = listNO2.get(i);
+
             Medicion medicion = new Medicion(isPureMadrid());
-            medicion.setCompuesto(compuesto); // NO2
-            medicion.setSavedAtHour((Calendar) savedTime.clone());
-            medicion.setMeasuredAt(row);
-            //
-            for(String column : tableMap.columnKeySet()) {
-                if (tableMap.contains(row,column)) {
-                    medicion.add(column,tableMap.get(row,column));
-                }
-            }
+            medicion.setMeasuredAt(time.getTime());
+            medicion.setSavedAtHour(Calendar.getInstance().getTime());
+
+            // Parse each Compuesto
+            medicion.put(NO2,formatValues(time,tableNO2));
+            medicion.put(CO,formatValues(time,tableCO));
+            medicion.put(SO2,formatValues(time,tableSO2));
+            medicion.put(BEN,formatValues(time,tableBEN));
+            medicion.put(O3,formatValues(time,tableO3));
+            medicion.put(PM10,formatValues(time,tablePM10));
+            medicion.put(PM2_5,formatValues(time,tablePM25));
+            medicion.put(TOL,formatValues(time,tableTOL));
+
             Map<String, String> emailMap = medicion.computeAlertas();
             if (emailMap.containsKey("subject")) {
                 mLogger.info("Must send email with subject: " + emailMap.get("subject"));
@@ -192,6 +269,16 @@ public class Parser {
         return mediciones;
     }
 
+    private static Map<String, Object> formatValues(Calendar time, Table<Calendar, String, Object> tableNO2) {
+        Map<String,Object> values = new HashMap<>();
+        for(String column : tableNO2.columnKeySet()) {
+            if (tableNO2.contains(time,column)) {
+                Object value = tableNO2.get(time,column);
+                values.put(column,value);
+            }
+        }
+        return values;
+    }
 
 
 }

@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 /**
  * Created by Delga on 10/12/2016.
  */
-
 public class NotificationBody {
 
     public enum Version{
@@ -13,42 +12,11 @@ public class NotificationBody {
         ADMIN
     }
 
-    private final Data data;
+    public final ApiResponse.NotificationData data;
     private final String to;
 
-    private class Data {
-        private final String currentStatus;
-        private final String date;
-        private final String escenario;
-        private final String estado;
-
-        private Data(String date, String currentStatus, String escenario, String estado) {
-            this.currentStatus = currentStatus;
-            this.date = date;
-            this.escenario = escenario;
-            this.estado = estado;
-        }
-
-        public String getCurrentStatus() {
-            return currentStatus;
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public String getEscenario() {
-            return escenario;
-        }
-
-        public String getEstado() {
-            return estado;
-        }
-
-    }
-
-    public  NotificationBody(String date, String currentStatus, String escenario, String estado, String to) {
-        this.data = new Data(date, currentStatus, escenario, estado);
+    public NotificationBody(String date, boolean warningStatus, String currentStatus, String validStatus, String maxStatus,  String escenarioToday, String escenarioTomorrow, String to, String flags) {
+        this.data = new ApiResponse.NotificationData(date, warningStatus, currentStatus, validStatus, maxStatus, escenarioToday, escenarioTomorrow, flags);
         this.to = to;
     }
 
@@ -57,7 +25,7 @@ public class NotificationBody {
         return gson.toJson(this);
     }
 
-    public Data getData() {
+    public ApiResponse.NotificationData getData() {
         return data;
     }
 

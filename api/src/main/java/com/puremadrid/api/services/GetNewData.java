@@ -29,9 +29,9 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
-import com.google.common.collect.Table;
 import com.puremadrid.core.model.ApiMedicion;
 import com.puremadrid.core.model.ApiResponse;
+import com.puremadrid.core.model.Compuesto;
 import com.puremadrid.core.model.Constants;
 import com.puremadrid.core.model.Medicion;
 import com.puremadrid.core.utils.GlobalUtils;
@@ -191,27 +191,40 @@ public class GetNewData extends MainServlet {
         List<Entity> batch = new ArrayList<>();
         for (Medicion medicion : mediciones){
             // Measured date
-            Date measuredDate=medicion.getMeasuredAtAsCalendar().getTime();
+            long measuredAtMillis = medicion.getMeasuredAt();
+            Date measuredAt = new Date();
+            Calendar measuredAtCalendar = Calendar.getInstance();
+            measuredAtCalendar.setTimeInMillis(measuredAtMillis);
+            measuredAt.setTime(measuredAtMillis);
             //
-            Calendar savedAt = medicion.getSavedAtHour();
-            // Build task
-            Entity entity = new Entity(ENTITY_TYPE_MEDIDAS, savedAt.getTimeInMillis());
-            entity.setIndexedProperty(PROPERTY_COMPUESTO, medicion.getCompuesto());
-            entity.setIndexedProperty(PROPERTY_AVISO,medicion.getAviso());
-            entity.setIndexedProperty(PROPERTY_AVISO_STATE,medicion.getAvisoState());
-            entity.setIndexedProperty(PREPERTY_AVISO_MAX_TODAY,medicion.getAvisoMaxToday());
-            entity.setIndexedProperty(PROPERTY_ESCENARIO_STATE_TODAY,medicion.getEscenarioStateToday());
-            entity.setIndexedProperty(PROPERTY_ESCENARIO_STATE_TOMORROW,medicion.getEscenarioStateTomorrow());
-            entity.setIndexedProperty(PROPERTY_ESCENARIO_STATE_TOMORROW_MANUAL,medicion.getEscenarioManualTomorrow());
-            entity.setIndexedProperty(PROPERTY_SAVED_AT, savedDate);
-            entity.setIndexedProperty(PROPERTY_MEASURE_DATE, measuredDate);
-            entity.setIndexedProperty(PROPERTY_MEASURE_TIME,stringHour(medicion.getMeasuredAtAsCalendar().get(Calendar.HOUR_OF_DAY)));
-            // Build stations
-            for ( Map.Entry<String, Integer> entry : medicion.getNO2().entrySet()) {
-                entity.setUnindexedProperty(entry.getKey(),entry.getValue());
+            long savedAtMillis = medicion.getSavedAtHour();
+            Date savedAt = new Date();
+            savedAt.setTime(savedAtMillis);
+
+            // Una entidad por cada compuesto
+            for (Compuesto compuesto: Compuesto.measuredCompuestos()) {
+                // Build entity
+                Entity entity = new Entity(ENTITY_TYPE_MEDIDAS, measuredAt.getTime() + compuesto.getId());
+                entity.setIndexedProperty(PROPERTY_COMPUESTO, compuesto.name());
+                entity.setIndexedProperty(PROPERTY_AVISO, medicion.getAviso());
+                entity.setIndexedProperty(PROPERTY_AVISO_STATE, medicion.getAvisoState());
+                entity.setIndexedProperty(PREPERTY_AVISO_MAX_TODAY, medicion.getAvisoMaxToday());
+                entity.setIndexedProperty(PROPERTY_ESCENARIO_STATE_TODAY, medicion.getEscenarioStateToday());
+                entity.setIndexedProperty(PROPERTY_ESCENARIO_STATE_TOMORROW, medicion.getEscenarioStateTomorrow());
+                entity.setIndexedProperty(PROPERTY_ESCENARIO_STATE_TOMORROW_MANUAL, medicion.getEscenarioManualTomorrow());
+                entity.setIndexedProperty(PROPERTY_SAVED_AT, savedDate);
+                entity.setIndexedProperty(PROPERTY_MEASURE_DATE, measuredAt);
+                entity.setIndexedProperty(PROPERTY_MEASURE_TIME, stringHour(measuredAtCalendar.get(Calendar.HOUR_OF_DAY)));
+                // Build stations
+                Map<String, Object> valueMap = medicion.getCompuestoValues(compuesto);
+                if (valueMap != null) {
+                    for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
+                        entity.setUnindexedProperty(entry.getKey(), entry.getValue());
+                    }
+                }
+                // Store
+                batch.add(entity);
             }
-            // Store
-            batch.add(entity);
         }
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(batch);

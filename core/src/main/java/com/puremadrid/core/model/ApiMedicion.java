@@ -1,5 +1,6 @@
 package com.puremadrid.core.model;
 
+import com.google.common.collect.Table;
 import com.google.gson.Gson;
 import com.puremadrid.core.utils.GlobalUtils;
 
@@ -50,11 +51,16 @@ public class ApiMedicion {
     protected static final int HORAS_AVISO = 2;
     protected static final int HORAS_ALERTA = 3;
 
-    /**
-     *  Format:  "estacion_XX" -> value
-     */
-    Map<String,Integer> no2values = new HashMap<>();
-    protected String compuesto;
+    Map<String,Object> no2values = new HashMap<>();
+    Map<String,Object> coValues = new HashMap<>();
+    Map<String,Object> so2values = new HashMap<>();
+    Map<String,Object> o3values = new HashMap<>();
+
+    Map<String,Object> tolValues = new HashMap<>();
+    Map<String,Object> benValues = new HashMap<>();
+    Map<String,Object> pm25values = new HashMap<>();
+    Map<String,Object> pm10values = new HashMap<>();
+
     protected Calendar savedAtHour;
     protected Calendar measuredAt;
     protected String aviso;
@@ -66,7 +72,7 @@ public class ApiMedicion {
     protected String escenarioManualTomorrow;
     protected boolean hasAllValues;
 
-    public ApiMedicion(Date measuredAt, String currentState, String avisoState, String avisoMaxToday, String escenarioToday, String escenarioTomorrow, String escenarioTomorrowManual, boolean isPureMadrid, Map<String,Integer> measures) {
+    public ApiMedicion(Date measuredAt, String currentState, String avisoState, String avisoMaxToday, String escenarioToday, String escenarioTomorrow, String escenarioTomorrowManual, boolean isPureMadrid, Map<String,Object> measures) {
         this(measuredAt, currentState, avisoState, avisoMaxToday, escenarioToday, escenarioTomorrow, escenarioTomorrowManual, isPureMadrid);
         if (measures != null){
             no2values = measures;
@@ -109,6 +115,35 @@ public class ApiMedicion {
 
     }
 
+    public void put(Compuesto compuesto, Map<String, Object> values) {
+        switch (compuesto){
+            case CO:
+                coValues = values;
+                break;
+            case NO2:
+                no2values = values;
+                break;
+            case SO2:
+                so2values = values;
+                break;
+            case O3:
+                o3values = values;
+                break;
+            case TOL:
+                tolValues = values;
+                break;
+            case BEN:
+                benValues = values;
+                break;
+            case PM2_5:
+                pm25values = values;
+                break;
+            case PM10:
+                pm10values = values;
+                break;
+        }
+    }
+
     public String getAviso() {
         return aviso;
     }
@@ -117,24 +152,24 @@ public class ApiMedicion {
         this.aviso = aviso;
     }
 
-    public void add(String column, Integer integer) {
-        no2values.put(column,integer);
+    public void setSavedAtHour(Date savedAtHour) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(savedAtHour);
+        this.savedAtHour = calendar;
     }
 
-    public void setSavedAtHour(Calendar savedAtHour) {
-        this.savedAtHour = savedAtHour;
+    public void setMeasuredAt(Date measuredAt) {
+        if (measuredAt == null){
+            this.measuredAt = null;
+        } else {
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("CET"));
+            calendar.setTime(measuredAt);
+            this.measuredAt = calendar;
+        }
     }
 
-    public void setMeasuredAt(Calendar measuredAt) {
-        this.measuredAt = measuredAt;
-    }
-
-    public String getCompuesto() {
-        return compuesto;
-    }
-
-    public Calendar getSavedAtHour() {
-        return savedAtHour;
+    public long getSavedAtHour() {
+        return savedAtHour.getTimeInMillis();
     }
 
     public long getMeasuredAt() {
@@ -149,33 +184,51 @@ public class ApiMedicion {
         this.avisoMaxToday = avisoMaxToday;
     }
 
-    public Map<String,Integer> getNO2() {
+    public Map<String,Object> getNO2() {
         return no2values;
     }
 
-    public int getNO2Size() {
-        return no2values.size();
+    public Map<String, Object> getCoValues() {
+        return coValues;
     }
 
-    public void setCompuesto(int measuredParameter) {
-        switch (measuredParameter){
-            case 8: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;º
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
-//            case 4: compuesto = "NO2"; break;
+    public Map<String, Object> getSo2values() {
+        return so2values;
+    }
+
+    public Map<String, Object> getO3values() {
+        return o3values;
+    }
+
+    public Map<String, Object> getTolValues() {
+        return tolValues;
+    }
+
+    public Map<String, Object> getBenValues() {
+        return benValues;
+    }
+
+    public Map<String, Object> getPm25values() {
+        return pm25values;
+    }
+
+    public Map<String, Object> getPm10values() {
+        return pm10values;
+    }
+
+    public Map<String,Object> getCompuestoValues(Compuesto compuesto) {
+        switch (compuesto){
+            case CO: return coValues;
+            case NO2: return no2values;
+            case SO2: return so2values;
+            case O3: return o3values;
+            case TOL: return tolValues;
+            case BEN: return benValues;
+            case PM2_5: return pm25values;
+            case PM10: return pm10values;
 
         }
+        return null;
     }
 
     public boolean hasAllValues() {
@@ -236,7 +289,7 @@ public class ApiMedicion {
         int warning180 = 0;
         int maxValue = 0;
         for (Station station : stations){
-            Integer value = no2values.get("estacion_" + GlobalUtils.intTwoDigits(station.getId()));
+            Integer value = (Integer) no2values.get("estacion_" + GlobalUtils.intTwoDigits(station.getId()));
             if (value == null){
                 continue;
             }
