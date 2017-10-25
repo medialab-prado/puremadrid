@@ -55,15 +55,15 @@
             </intent-filter>
         </activity>
 
-        <!--<receiver android:name=".widget.PureMadridWidget">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
-            <!--</intent-filter>-->
+        <receiver android:name=".widget.PureMadridWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
-            <!--<meta-data-->
-                <!--android:name="android.appwidget.provider"-->
-                <!--android:resource="@xml/pure_madrid_widget_info" />-->
-        <!--</receiver>-->
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/pure_madrid_widget_info" />
+        </receiver>
     </application>
 
 </manifest>
