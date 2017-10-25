@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 
 public class PureMadridContract {
 
-    public static final String AUTHORITY = "com.javierdelgado.puremadrid";
+    public static final String AUTHORITY = "com.javierdelgado.puremadrid.dataton";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
     public static final String PATH_POLLUTION = "pollution";
 

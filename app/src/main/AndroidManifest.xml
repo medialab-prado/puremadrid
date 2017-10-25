@@ -21,7 +21,7 @@
 
         <provider
             android:name=".data.PureMadridContentProvider"
-            android:authorities="com.javierdelgado.puremadrid"
+            android:authorities="com.javierdelgado.puremadrid.dataton"
             android:exported="false" />
 
         <service android:name=".receivers.MyFirebaseMessagingService">

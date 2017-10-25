@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="link_googleplay_from_update_dialog">YOUR_GOOGLE_PLAY_APP</string>
+    <string name="link_googleplay_from_update_dialog"><![CDATA[https://play.google.com/store/apps/details?id=com.albaitdevs.puremadrid&amp;referrer=utm_source%3Dinsideapp_updatedialog%26anid%3Dadmob]]></string>
     <string name="cloud_puremadrid_json">YOUR_CURRENT_VERSION</string>
     <string name="cloud_pure_madrid_release_notes">YOUR_RELEASE_NOTES</string>
 
     <string name="url_more_information">http://www.mambiente.munimadrid.es/opencms/export/sites/default/calaire/Anexos/mas_informacion.pdf</string>
     <string name="url_boletin_diario">http://www.mambiente.munimadrid.es/datos_prevalidados/boletin_diario.pdf</string>
     <string name="url_official_docs">http://calidadaire.madrid.es/opencms/export/sites/default/calaire/Anexos/Nuevo_protocolo_NO2.pdf</string>
-    
+
+    <string name="pure_madrid_api_url">https://pure-madrid-dataton.appspot.com/_ah/api/</string>
+
 </resources>
