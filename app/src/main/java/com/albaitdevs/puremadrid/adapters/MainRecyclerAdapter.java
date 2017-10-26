@@ -127,7 +127,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 case 0:
                     progressBar.setVisibility(View.VISIBLE);
                     // View setup
-                    layoutParams.height = 350;
+                    layoutParams.height = (int) itemView.getContext().getResources().getDimension(R.dimen.escenarios_height);
                     imageView.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.skyline_item));
                     // Set text and background color
                     color = mActivity.getResources().getColor(R.color.blue);
@@ -161,7 +161,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     break;
                 case 1:
                     progressBar.setVisibility(View.VISIBLE);
-                    layoutParams.height = 350;
+                    layoutParams.height = (int) itemView.getContext().getResources().getDimension(R.dimen.escenarios_height);
                     imageView.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.skyline_item));
 
                     // Text
@@ -195,14 +195,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     textView.setText(text);
                     break;
                 case 2:
-                    layoutParams.height = 500;
+                    layoutParams.height = (int) itemView.getContext().getResources().getDimension(R.dimen.main_last_items_height);
                     text = mActivity.getString(R.string.goto_map);
                     textView.setText(text);
                     Picasso.with(mActivity).load(R.drawable.main_map_image).into(imageView);
                     progressBar.setVisibility(View.GONE);
                     break;
                 case 3:
-                    layoutParams.height = 500;
+                    layoutParams.height = (int) itemView.getContext().getResources().getDimension(R.dimen.main_last_items_height);
                     text = mActivity.getString(R.string.menuitem_last_announcement);
                     textView.setText(text);
                     Picasso.with(mActivity).load(R.drawable.main_moreinfo_image).into(imageView);
