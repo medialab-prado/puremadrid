@@ -18,6 +18,19 @@
             />
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_layers"
+            android:src="@drawable/layer_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end|right"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="90dp"
+            android:contentDescription="@string/choose_date"
+            app:layout_anchorGravity="top|right|end"
+            />
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_open_calendar"
             android:src="@drawable/calendar_icon"
             android:layout_width="wrap_content"

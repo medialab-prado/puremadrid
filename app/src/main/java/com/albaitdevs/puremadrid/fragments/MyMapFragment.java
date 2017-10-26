@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,13 +49,20 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.gson.Gson;
+import com.google.maps.android.heatmaps.Gradient;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.puremadrid.api.pureMadridApi.model.ApiMedicion;
 import com.puremadrid.core.model.Station;
 import com.puremadrid.core.utils.GlobalUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,10 +72,14 @@ import static com.albaitdevs.puremadrid.activities.MainActivity.LOADER_LAST_MEAS
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMyLocationButtonClickListener, GetLastStatusAsync.ApiListener, DatePickerFragment.OnDateTimeSetListener, DataBaseLoader.DataBaseLoaderCallbacks {
 
     private static final String KEY_MAPVIEW_SAVE_INSTANCE = "mapViewSaveState";
+    private static final float BASE_ZOOM = 12.0f;
+    private static final String KEY_SHOW_HEATMAP = "key_show_heatmap";
+    private static final String KEY_SHOW_STATIONS = "key_show_stations";
     private MainActivity mNavigationCallback;
     private ApiMedicion currentPollution;
     @BindView(R.id.map_progressabar) ProgressBar progressBar;
     @BindView(R.id.fab_open_calendar)  FloatingActionButton openMapButton;
+    @BindView(R.id.fab_layers)  FloatingActionButton fabLayer;
     @BindView(R.id.coordinator_map) CoordinatorLayout coordinatorLayout;
     private DataBaseLoader mCallbacks;
 
@@ -80,6 +92,13 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
     private GoogleMap map;
     private MapView mMapView;
     private View view;
+
+    private TileOverlay mOverlay = null;
+    private HeatmapTileProvider mProvider = null;
+    private static final double TILE_RADIUS_BASE = 1.48;
+    private int mRadiusZoom = (int) BASE_ZOOM;
+    private boolean showHeatMap = true;
+    private boolean showStations = true;
 
     @Override
     public void onAttach(Activity context) {
@@ -104,6 +123,11 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
         mCallbacks = new DataBaseLoader(getActivity(),this);
         if (mMapView != null) {
             mMapView.onCreate(savedInstanceState);
+        }
+
+        if (savedInstanceState != null) {
+            showHeatMap = savedInstanceState.getBoolean(KEY_SHOW_HEATMAP);
+            showStations = savedInstanceState.getBoolean(KEY_SHOW_STATIONS);
         }
     }
 
@@ -145,6 +169,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
 
         //Open Calendar Action
         openMapButton.setOnClickListener(this);
+        fabLayer.setOnClickListener(this);
 
         return view;
     }
@@ -155,6 +180,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
         if (mMapView != null) {
             mMapView.onSaveInstanceState(savedInstanceState);
         }
+        savedInstanceState.putBoolean(KEY_SHOW_HEATMAP,showHeatMap);
+        savedInstanceState.putBoolean(KEY_SHOW_STATIONS,showStations);
     }
 
     @Override
@@ -191,10 +218,27 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
 
         CameraUpdate cu;
         LatLng madridCenter = new LatLng(40.4169335, -3.7083759);
-        float zoom = 12.0f;
-        cu = CameraUpdateFactory.newLatLngZoom(madridCenter, zoom);
+        final float[] zoom = {BASE_ZOOM};
+        cu = CameraUpdateFactory.newLatLngZoom(madridCenter, zoom[0]);
         map.moveCamera(cu);
         map.getUiSettings().setMapToolbarEnabled(false);
+
+        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+
+
+            @Override
+            public void onCameraChange(CameraPosition pos) {
+                if (mProvider != null && mOverlay != null) {
+                    int currentZoom = (int) Math.floor(pos.zoom);
+                    if (currentZoom != mRadiusZoom) {
+                        mRadiusZoom = currentZoom;
+                        int radius = (int) Math.floor(Math.pow(TILE_RADIUS_BASE, mRadiusZoom));
+                        mProvider.setRadius(radius);
+                        mOverlay.clearTileCache();
+                    }
+                }
+            }
+        });
 
         map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
@@ -242,10 +286,62 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
 
     }
 
-    private void loadMarkers() {
-        if (map != null){
-            map.clear();
+    private void loadHeatMap() {
+        List<LatLng> list = new ArrayList<>();
+        List<WeightedLatLng> weightedStations = new ArrayList<>();
+
+        // Get the data: latitude/longitude positions of police stations.
+        Station[] stations = new Gson().fromJson(GlobalUtils.getString(GlobalUtils.getInputStream("stations.json")), Station[].class);
+        for (Station station : stations) {
+            String stationId = PureMadridContract.PollutionEntry.COLUMN_BASE_STATION + String.format("%02d", station.getId());
+
+            LatLng latLng = new LatLng(station.getLatitud_decimal(), station.getLongitud_decimal());
+            list.add(latLng);
+            //
+            Object valueObject = currentPollution.getNo2().get(stationId);
+            float stationValue;
+            if (valueObject == null) {
+                stationValue = -1;
+            } else if (valueObject instanceof BigDecimal){
+                stationValue = ((BigDecimal) valueObject).intValueExact();
+            } else {
+                stationValue = (int) valueObject;
+            }
+
+            stationValue /= 400; // Supposing 400 as MAX
+            stationValue *= 0.8f; // Setting max
+
+            WeightedLatLng weightedLatLng = new WeightedLatLng(latLng,stationValue);
+            weightedStations.add(weightedLatLng);
         }
+
+        // Set gradient
+        int[] colors = {
+                Color.rgb(79, 195, 247), // blue
+                Color.rgb(255, 235, 59), // yellow
+                Color.rgb(255, 152, 0), // orange
+                Color.rgb(244, 67, 54)    // red
+        };
+        float[] startPoints = {
+                0.01f, 0.7f, 0.8f, 1f
+        };
+        Gradient gradient = new Gradient(colors, startPoints);
+
+
+
+        // Create a heat map tile provider, passing it the latlngs of the police stations.
+        int radius = (int) Math.floor(Math.pow(TILE_RADIUS_BASE, mRadiusZoom));
+        mProvider = new HeatmapTileProvider.Builder()
+                .weightedData(weightedStations)
+                .gradient(gradient)
+                .build();
+        mProvider.setRadius(radius);
+
+        // Add a tile overlay to the map, using the heat map tile provider.
+        mOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+    }
+
+    private void loadMarkers() {
         Station[] stations = new Gson().fromJson(GlobalUtils.getString(GlobalUtils.getInputStream("stations.json")), Station[].class);
         for (Station station : stations){
             LatLng latLng = new LatLng(station.getLatitud_decimal(),station.getLongitud_decimal());
@@ -303,7 +399,40 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
                 newFragment.setListener(this);
                 newFragment.show(getFragmentManager(), "PickerFragmentDialog");
                 break;
+
+            case R.id.fab_layers:
+                //Date Picker Button
+                openOptionsDialog();
+                break;
         }
+    }
+
+    private void openOptionsDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.map_options));
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+        builder.setMultiChoiceItems(new String[]{
+                        getString(R.string.checkbox_heatmap),
+                        getString(R.string.checkbox_stations)},
+                new boolean[]{showHeatMap, showStations},
+                new DialogInterface.OnMultiChoiceClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                switch (which){
+                    case 0: showHeatMap = isChecked; break;
+                    case 1: showStations = isChecked; break;
+                }
+                map.clear();
+                loadItems();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void showRationalePermissionAlertDialog() {
@@ -461,9 +590,19 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
             Toast.makeText(getActivity(),getString(R.string.no_data_for_date),Toast.LENGTH_LONG).show();
         } else {
             if (map != null) {
-                loadMarkers();
+                loadItems();
             }
         }
+    }
+
+    private void loadItems() {
+        if (showHeatMap){
+            loadHeatMap();
+        }
+        if (showStations) {
+            loadMarkers();
+        }
+
     }
 
     /**
@@ -502,7 +641,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
     public void onDBFinished(ApiMedicion medicion) {
         currentPollution = medicion;
         if (map != null) {
-            loadMarkers();
+             loadItems();
         }
     }
 
