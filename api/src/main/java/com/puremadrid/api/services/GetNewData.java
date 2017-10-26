@@ -128,6 +128,7 @@ public class GetNewData extends MainServlet {
         }
 
         if (formattedData != null && formattedData.size() > 0) {
+            updateToday(formattedData);
             saveToDataStore(formattedData);
             //
             ApiResponse apiResponse = new ApiResponse(ApiResponse.HTTP_OK,ApiResponse.ERROR_OK,ApiResponse.MESSAGE_UPDATED_ROWS);
@@ -144,7 +145,40 @@ public class GetNewData extends MainServlet {
         }
     }
 
+    private void updateToday(List<Medicion> formattedData) {
 
+        int dbCount = 50;
+        ArrayList<Medicion> analyzing = getLastStatus(dbCount);
+        Collections.reverse(analyzing);
+        int foundDbCount = analyzing.size();
+        Collections.sort(formattedData);
+        analyzing.addAll(formattedData);
+
+        for (int i=foundDbCount;i<analyzing.size();i++) {
+
+            Medicion currentMedicion = analyzing.get(i);
+            Medicion prevMedicion = analyzing.get(i-1);
+
+            ApiMedicion.Escenario escenarioToday = Medicion.Escenario.NONE;
+            ApiMedicion.Escenario escenarioTomorrow = Medicion.Escenario.NONE;
+            ApiMedicion.Escenario escenarioManualTomorrow = Medicion.Escenario.NONE;;
+
+            Calendar currentMedicionTime = Calendar.getInstance(TimeZone.getTimeZone("CET"));
+            currentMedicionTime.setTimeInMillis(currentMedicion.getMeasuredAt());
+
+            if (currentMedicionTime.get(Calendar.HOUR_OF_DAY) == HOUR_OF_REFERENCE) {
+                escenarioToday = Medicion.Escenario.valueOf(prevMedicion.getEscenarioStateTomorrow());
+                escenarioTomorrow = ApiMedicion.Escenario.NONE;
+            } else {
+                escenarioToday = Medicion.Escenario.valueOf(prevMedicion.getEscenarioStateToday());
+                escenarioTomorrow = Medicion.Escenario.valueOf(prevMedicion.getEscenarioStateTomorrow());
+            }
+
+            currentMedicion.setEscenarioStateToday(escenarioToday.name());
+            currentMedicion.setEscenarioStateTomorrow(escenarioTomorrow.name());
+        }
+
+    }
 
 
     @Override
@@ -157,6 +191,7 @@ public class GetNewData extends MainServlet {
         try {
             // Store
             List<Medicion> formattedData = parseFromMissingDay(req.getReader());
+            updateToday(formattedData);
             saveToDataStore(formattedData);
 
             // Save
