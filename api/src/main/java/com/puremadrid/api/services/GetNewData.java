@@ -20,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.repackaged.com.google.datastore.v1.PropertyFilter;
 import com.puremadrid.api.MainServlet;
 import com.puremadrid.api.core.Parser;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -41,6 +42,7 @@ import com.puremadrid.api.utils.NotificationUtils;
 import static com.puremadrid.api.core.Parser.parseFromMissingDay;
 import static com.puremadrid.core.model.ApiMedicion.Escenario.*;
 import static com.puremadrid.core.model.ApiMedicion.Estado.*;
+import static com.puremadrid.core.model.Compuesto.NO2;
 import static com.puremadrid.core.utils.GlobalUtils.stringHour;
 
 /**
@@ -149,6 +151,9 @@ public class GetNewData extends MainServlet {
 
         int dbCount = 50;
         ArrayList<Medicion> analyzing = getLastStatus(dbCount);
+        if (analyzing.size() < 1){
+            return;
+        }
         Collections.reverse(analyzing);
         int foundDbCount = analyzing.size();
         Collections.sort(formattedData);
@@ -161,7 +166,6 @@ public class GetNewData extends MainServlet {
 
             ApiMedicion.Escenario escenarioToday = Medicion.Escenario.NONE;
             ApiMedicion.Escenario escenarioTomorrow = Medicion.Escenario.NONE;
-            ApiMedicion.Escenario escenarioManualTomorrow = Medicion.Escenario.NONE;;
 
             Calendar currentMedicionTime = Calendar.getInstance(TimeZone.getTimeZone("CET"));
             currentMedicionTime.setTimeInMillis(currentMedicion.getMeasuredAt());
@@ -228,7 +232,7 @@ public class GetNewData extends MainServlet {
             // Measured date
             long measuredAtMillis = medicion.getMeasuredAt();
             Date measuredAt = new Date();
-            Calendar measuredAtCalendar = Calendar.getInstance();
+            Calendar measuredAtCalendar = Calendar.getInstance(TimeZone.getTimeZone("CET"));
             measuredAtCalendar.setTimeInMillis(measuredAtMillis);
             measuredAt.setTime(measuredAtMillis);
             //
@@ -295,7 +299,15 @@ public class GetNewData extends MainServlet {
 
         // Prepare
         Query.Filter keyFilter = new Query.FilterPredicate(PROPERTY_MEASURE_DATE, Query.FilterOperator.GREATER_THAN, dateTwoAgo);
-        Query query = new Query(ENTITY_TYPE_MEDIDAS).setFilter(keyFilter).addSort(PROPERTY_MEASURE_DATE, Query.SortDirection.DESCENDING);
+        Query.Filter no2Filter = new Query.FilterPredicate(PROPERTY_COMPUESTO, Query.FilterOperator.EQUAL, NO2.name());
+        List<Query.Filter> filterList = new ArrayList<>();
+        filterList.add(keyFilter);
+        filterList.add(no2Filter);
+        Query.Filter filter = new Query.CompositeFilter(Query.CompositeFilterOperator.AND, filterList);
+        Query query = new Query(ENTITY_TYPE_MEDIDAS)
+                .setFilter(filter)
+                .addSort(PROPERTY_MEASURE_DATE
+                        , Query.SortDirection.DESCENDING);
         // Query
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery pq = datastore.prepare(query);
