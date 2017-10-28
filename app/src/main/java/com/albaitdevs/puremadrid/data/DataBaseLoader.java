@@ -9,7 +9,6 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.puremadrid.api.pureMadridApi.model.ApiMedicion;
-import com.puremadrid.api.pureMadridApi.model.Calendar;
 import com.puremadrid.api.pureMadridApi.model.JsonMap;
 import com.puremadrid.core.model.Compuesto;
 import com.puremadrid.core.model.Station;
@@ -17,6 +16,7 @@ import com.puremadrid.core.utils.GlobalUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import static com.albaitdevs.puremadrid.data.PureMadridContract.PollutionEntry.COLUMN_AVISO_LEVEL_NOW;
@@ -78,7 +78,7 @@ public class DataBaseLoader implements LoaderManager.LoaderCallbacks<Cursor>{
 
             try {
                 date = formatter.parse(dateString);
-                Calendar calendar = new Calendar();
+                Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(date.getTime());
             } catch (ParseException e) {
 

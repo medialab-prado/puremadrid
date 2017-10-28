@@ -95,7 +95,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
 
     private TileOverlay mOverlay = null;
     private HeatmapTileProvider mProvider = null;
-    private static final double TILE_RADIUS_BASE = 1.48;
+    private static final double TILE_RADIUS_BASE = 1.47;
     private int mRadiusZoom = (int) BASE_ZOOM;
     private boolean showHeatMap = true;
     private boolean showStations = true;
@@ -301,11 +301,14 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
             Object valueObject = currentPollution.getNo2().get(stationId);
             float stationValue;
             if (valueObject == null) {
-                stationValue = -1;
+                stationValue = 0;
             } else if (valueObject instanceof BigDecimal){
                 stationValue = ((BigDecimal) valueObject).intValueExact();
             } else {
                 stationValue = (int) valueObject;
+            }
+            if (stationValue < 0){
+                stationValue = 0;
             }
 
             stationValue /= 400; // Supposing 400 as MAX
@@ -320,10 +323,9 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
                 Color.rgb(79, 195, 247), // blue
                 Color.rgb(255, 235, 59), // yellow
                 Color.rgb(255, 152, 0), // orange
-                Color.rgb(244, 67, 54)    // red
         };
         float[] startPoints = {
-                0.01f, 0.7f, 0.8f, 1f
+                0.2f, 0.8f, 0.95f
         };
         Gradient gradient = new Gradient(colors, startPoints);
 
@@ -334,9 +336,12 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
         mProvider = new HeatmapTileProvider.Builder()
                 .weightedData(weightedStations)
                 .gradient(gradient)
+                .opacity(0.6f)
                 .build();
         mProvider.setRadius(radius);
-
+        if (mOverlay != null) {
+            mOverlay.clearTileCache();
+        }
         // Add a tile overlay to the map, using the heat map tile provider.
         mOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
     }
@@ -427,7 +432,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
                     case 0: showHeatMap = isChecked; break;
                     case 1: showStations = isChecked; break;
                 }
-                map.clear();
                 loadItems();
             }
         });
@@ -596,7 +600,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
     }
 
     private void loadItems() {
-        if (showHeatMap){
+        map.clear();
+        if (showHeatMap) {
             loadHeatMap();
         }
         if (showStations) {
