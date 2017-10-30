@@ -23,6 +23,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.puremadrid.core.model.Compuesto.NO2;
+
 /**
  * Created by Delga on 16/12/2016.
  */
@@ -59,7 +61,11 @@ public class SetManualScenario extends MainServlet {
 
         // Prepare
         int amount = 1;
-        Query query = new Query(ENTITY_TYPE_MEDIDAS).addSort(PROPERTY_MEASURE_DATE, Query.SortDirection.DESCENDING);
+        Query.Filter no2Filter = new Query.FilterPredicate(PROPERTY_COMPUESTO, Query.FilterOperator.EQUAL, NO2.name());
+        Query query = new Query(ENTITY_TYPE_MEDIDAS)
+                .setFilter(no2Filter)
+                .addSort(PROPERTY_MEASURE_DATE, Query.SortDirection.DESCENDING);
+
         // Query
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery pq = datastore.prepare(query);

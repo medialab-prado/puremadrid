@@ -129,19 +129,18 @@ public class PureMadridApi {
         calendar.setTime(date);
         calendar.setTimeZone(TimeZone.getTimeZone("CET"));
 
-        int amount = 1;
+
 
         // Prepare
-        Query.FilterPredicate filter = new Query.FilterPredicate(PROPERTY_MEASURE_DATE, Query.FilterOperator.LESS_THAN_OR_EQUAL, date);
-        Query query = new Query(ENTITY_TYPE_MEDIDAS)
-                .addSort(PROPERTY_MEASURE_DATE, Query.SortDirection.DESCENDING)
-                .setFilter(filter);
+        Query.FilterPredicate filter = new Query.FilterPredicate(PROPERTY_MEASURE_DATE, Query.FilterOperator.EQUAL, date);
+        Query query = new Query(ENTITY_TYPE_MEDIDAS).setFilter(filter);
+
         // Query
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery pq = datastore.prepare(query);
         // Get results
         List<Entity> resultList = pq.asList(FetchOptions.Builder.withLimit(1));
-        if (resultList.size() == amount) {
+        if (resultList.size() == 1) {
 
             mLogger.info("Found last value");
             Entity entity = resultList.get(0);

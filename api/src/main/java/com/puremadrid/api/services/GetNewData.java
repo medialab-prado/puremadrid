@@ -149,6 +149,7 @@ public class GetNewData extends MainServlet {
 
     private void updateToday(List<Medicion> formattedData) {
 
+        mLogger.info("UPDATING TODAY");
         int dbCount = 50;
         ArrayList<Medicion> analyzing = getLastStatus(dbCount);
         if (analyzing.size() < 1){
@@ -177,6 +178,9 @@ public class GetNewData extends MainServlet {
                 escenarioToday = Medicion.Escenario.valueOf(prevMedicion.getEscenarioStateToday());
                 escenarioTomorrow = Medicion.Escenario.valueOf(prevMedicion.getEscenarioStateTomorrow());
             }
+
+            mLogger.info("Setting today: " + escenarioToday.name());
+            mLogger.info("Setting tomorrow: " + escenarioTomorrow.name());
 
             currentMedicion.setEscenarioStateToday(escenarioToday.name());
             currentMedicion.setEscenarioStateTomorrow(escenarioTomorrow.name());
@@ -336,11 +340,21 @@ public class GetNewData extends MainServlet {
 
         // Prepare
         Query.Filter keyFilter = new Query.FilterPredicate(PROPERTY_MEASURE_DATE, Query.FilterOperator.GREATER_THAN, dateTwoAgo);
-        Query query = new Query(ENTITY_TYPE_MEDIDAS).setFilter(keyFilter).addSort(PROPERTY_MEASURE_DATE, Query.SortDirection.DESCENDING);
+        Query.Filter no2Filter = new Query.FilterPredicate(PROPERTY_COMPUESTO, Query.FilterOperator.EQUAL, NO2.name());
+        List<Query.Filter> filterList = new ArrayList<>();
+        filterList.add(keyFilter);
+        filterList.add(no2Filter);
+        Query.Filter filter = new Query.CompositeFilter(Query.CompositeFilterOperator.AND, filterList);
+        Query query = new Query(ENTITY_TYPE_MEDIDAS)
+                .setFilter(filter)
+                .addSort(PROPERTY_MEASURE_DATE
+                        , Query.SortDirection.DESCENDING);
+
         // Query
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery pq = datastore.prepare(query);
         // Get results
+
         List<com.google.appengine.api.datastore.Entity> resultList = pq.asList(FetchOptions.Builder.withLimit(amountData));
         ArrayList<Medicion> result = new ArrayList<>();
         if (resultList.size()!=0) {
