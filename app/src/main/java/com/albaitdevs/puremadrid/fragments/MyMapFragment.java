@@ -323,13 +323,12 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
                 Color.rgb(79, 195, 247), // blue
                 Color.rgb(255, 235, 59), // yellow
                 Color.rgb(255, 152, 0), // orange
+                Color.rgb(244, 67, 54)    // red
         };
         float[] startPoints = {
-                0.2f, 0.8f, 0.95f
+                0.2f, 0.8f, 0.9f, 1.0f
         };
         Gradient gradient = new Gradient(colors, startPoints);
-
-
 
         // Create a heat map tile provider, passing it the latlngs of the police stations.
         int radius = (int) Math.floor(Math.pow(TILE_RADIUS_BASE, mRadiusZoom));
