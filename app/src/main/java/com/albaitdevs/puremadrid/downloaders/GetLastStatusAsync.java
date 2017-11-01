@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 
 import com.albaitdevs.puremadrid.R;
 import com.albaitdevs.puremadrid.data.PureMadridDbHelper;
+import com.albaitdevs.puremadrid.sync.GetLastStatusJobService;
 import com.albaitdevs.puremadrid.widget.PureMadridWidget;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -22,7 +23,10 @@ import java.util.Date;
 
  public class GetLastStatusAsync  extends AsyncTask<Object, Object, ApiMedicion> {
 
-    public interface ApiListener{
+
+     private static final int MAX_RETRIES = 10;
+
+     public interface ApiListener{
         void onApiFinished(ApiMedicion result);
     }
 
@@ -30,11 +34,15 @@ import java.util.Date;
     private ApiListener listener;
     private Context mContext;
     private Date date;
+     private boolean isFromBackgound = false;
 
     public GetLastStatusAsync(Context context, ApiListener listener, Date date){
         this.listener = listener;
         this.mContext = context;
         this.date = date;
+        if (listener instanceof GetLastStatusJobService){
+            isFromBackgound = true;
+        }
     }
 
     @Override
@@ -46,49 +54,60 @@ import java.util.Date;
 
     @Override
     protected ApiMedicion doInBackground(Object... params) {
-        if(myApiService == null) {  // Only do this once
-            PureMadridApi.Builder builder = new PureMadridApi.Builder(AndroidHttp.newCompatibleTransport(),
-                    new AndroidJsonFactory(), null)
-                    // options for running against local devappserver
-                    // - 10.0.2.2 is localhost's IP address in Android emulator
-                    // - turn off compression date running against local devappserver
-                    // .setRootUrl("http://10.0.2.2:8080/_ah/api/")
-                    .setRootUrl(mContext.getString(R.string.pure_madrid_api_url))
-                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                        @Override
-                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-                            abstractGoogleClientRequest.setDisableGZipContent(true);
-                        }
-                    });
-
-            myApiService = builder.build();
-
-        }
-
         ApiMedicion result = null;
-        try {
-            if (date == null) {
-                result = myApiService.getLastStatus().execute();
-            } else {
-                result = myApiService.getStatusAt(new DateTime(date)).execute();
-            }
-        } catch (IOException e) {
-            return null;
+        int retries = 0;
+        while (result == null && retries < MAX_RETRIES){
+            result = getLastStatusRequest();
+            retries++;
         }
 
-        // Update database in background thread
-        PureMadridDbHelper.addMeasure(mContext,result);
+        if (result != null) {
+            // Update database in background thread
+            PureMadridDbHelper.addMeasure(mContext, result);
 
-        // Update Widget
-        Intent intent = new Intent(mContext,PureMadridWidget.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        ComponentName thisWidget = new ComponentName(mContext, PureMadridWidget.class);
-        int[] appWidgetIds = AppWidgetManager.getInstance(mContext).getAppWidgetIds(thisWidget);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,appWidgetIds);
-        mContext.sendBroadcast(intent);
+            // Update Widget
+            Intent intent = new Intent(mContext, PureMadridWidget.class);
+            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            ComponentName thisWidget = new ComponentName(mContext, PureMadridWidget.class);
+            int[] appWidgetIds = AppWidgetManager.getInstance(mContext).getAppWidgetIds(thisWidget);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+            mContext.sendBroadcast(intent);
 
+        }
         return result;
     }
+
+     private ApiMedicion getLastStatusRequest() {
+         ApiMedicion result = null;
+         try {
+             if (myApiService == null) {  // Only do this once
+                 PureMadridApi.Builder builder = new PureMadridApi.Builder(AndroidHttp.newCompatibleTransport(),
+                         new AndroidJsonFactory(), null)
+                         // options for running against local devappserver
+                         // - 10.0.2.2 is localhost's IP address in Android emulator
+                         // - turn off compression date running against local devappserver
+                         // .setRootUrl("http://10.0.2.2:8080/_ah/api/")
+                         .setRootUrl(mContext.getString(R.string.pure_madrid_api_url))
+                         .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                             @Override
+                             public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                                 abstractGoogleClientRequest.setDisableGZipContent(true);
+                             }
+                         });
+
+                 myApiService = builder.build();
+             }
+
+             if (date == null) {
+                 result = myApiService.getLastStatus().execute();
+             } else {
+                 result = myApiService.getStatusAt(new DateTime(date)).execute();
+             }
+         } catch (IOException e) {
+             return null;
+         }
+         return result;
+     }
 
     @Override
     protected void onPostExecute(ApiMedicion result) {
