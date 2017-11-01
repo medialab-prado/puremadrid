@@ -25,6 +25,7 @@ import java.util.Date;
 
 
      private static final int MAX_RETRIES = 10;
+     private int retries = 0;
 
      public interface ApiListener{
         void onApiFinished(ApiMedicion result);
@@ -54,11 +55,10 @@ import java.util.Date;
 
     @Override
     protected ApiMedicion doInBackground(Object... params) {
-        ApiMedicion result = null;
-        int retries = 0;
-        while (result == null && retries < MAX_RETRIES){
-            result = getLastStatusRequest();
+        ApiMedicion result = getLastStatusRequest();
+        while (result == null && isFromBackgound && retries < MAX_RETRIES){
             retries++;
+            result = getLastStatusRequest();
         }
 
         if (result != null) {

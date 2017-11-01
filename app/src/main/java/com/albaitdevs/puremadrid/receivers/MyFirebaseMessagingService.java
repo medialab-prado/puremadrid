@@ -69,39 +69,43 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 // Save data
                 ApiMedicion lastMedicion = PureMadridDbHelper.getLastMeasureNO2(getApplicationContext());
-                Estado oldCurrentEstado = Estado.valueOf(lastMedicion.getAvisoState());
-                Estado oldValidEstado = Estado.valueOf(lastMedicion.getAviso());
-                Estado oldMaxEstado = Estado.valueOf(lastMedicion.getAvisoMaxToday());
-                Escenario oldEscenarioToday= Escenario.valueOf(lastMedicion.getEscenarioStateToday());
-                Escenario oldEscenarioTomorrow = Escenario.valueOf(lastMedicion.getEscenarioStateTomorrow());
+                if (lastMedicion == null){
+                    // TODO: Retry get Last Status
+                } else {
+                    Estado oldCurrentEstado = Estado.valueOf(lastMedicion.getAvisoState());
+                    Estado oldValidEstado = Estado.valueOf(lastMedicion.getAviso());
+                    Estado oldMaxEstado = Estado.valueOf(lastMedicion.getAvisoMaxToday());
+                    Escenario oldEscenarioToday = Escenario.valueOf(lastMedicion.getEscenarioStateToday());
+                    Escenario oldEscenarioTomorrow = Escenario.valueOf(lastMedicion.getEscenarioStateTomorrow());
 
-                // STORE
-                lastMedicion.setEscenarioStateTomorrow(newEscenarioTomorrow.name());
-                lastMedicion.setEscenarioStateToday(newEscenarioToday.name());
-                lastMedicion.setAviso(newCurrentEstado.name());
-                lastMedicion.setAvisoState(newValidEstado.name());
-                lastMedicion.setAvisoMaxToday(newMaxEstado.name());
-                PureMadridDbHelper.updateLastMeasure(getApplicationContext(),lastMedicion);
+                    // STORE
+                    lastMedicion.setEscenarioStateTomorrow(newEscenarioTomorrow.name());
+                    lastMedicion.setEscenarioStateToday(newEscenarioToday.name());
+                    lastMedicion.setAviso(newCurrentEstado.name());
+                    lastMedicion.setAvisoState(newValidEstado.name());
+                    lastMedicion.setAvisoMaxToday(newMaxEstado.name());
+                    PureMadridDbHelper.updateLastMeasure(getApplicationContext(), lastMedicion);
 
-                if (data.getFlags().equals(Constants.FLAG_SET_ALWAYS_TOMORROW)
-                        || data.getFlags().equals(Constants.FLAG_SET_BOTH)){
-                    sendNotiTomorrow(newEscenarioTomorrow);
-                }
+                    if (data.getFlags().equals(Constants.FLAG_SET_ALWAYS_TOMORROW)
+                            || data.getFlags().equals(Constants.FLAG_SET_BOTH)) {
+                        sendNotiTomorrow(newEscenarioTomorrow);
+                    }
 
-                if (data.getFlags().equals(Constants.FLAG_SET_ALWAYS_TODAY)
-                        || data.getFlags().equals(Constants.FLAG_SET_BOTH)){
-                    sendNotiToday(newEscenarioToday);
-                }
+                    if (data.getFlags().equals(Constants.FLAG_SET_ALWAYS_TODAY)
+                            || data.getFlags().equals(Constants.FLAG_SET_BOTH)) {
+                        sendNotiToday(newEscenarioToday);
+                    }
 
-                // Valores elevados
-                if (newMaxEstado.ordinal() > oldMaxEstado.ordinal()){
+                    // Valores elevados
+                    if (newMaxEstado.ordinal() > oldMaxEstado.ordinal()) {
 
-                }
-                if (newValidEstado.ordinal() > oldValidEstado.ordinal()){
+                    }
+                    if (newValidEstado.ordinal() > oldValidEstado.ordinal()) {
 
-                }
-                if (newCurrentEstado.ordinal() > oldCurrentEstado.ordinal()){
+                    }
+                    if (newCurrentEstado.ordinal() > oldCurrentEstado.ordinal()) {
 
+                    }
                 }
 
             } catch (Exception e){
