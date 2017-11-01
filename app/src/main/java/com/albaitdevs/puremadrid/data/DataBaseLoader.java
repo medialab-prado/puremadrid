@@ -53,8 +53,8 @@ public class DataBaseLoader implements LoaderManager.LoaderCallbacks<Cursor>{
         return new CursorLoader(mActivity,
                 PureMadridContract.PollutionEntry.CONTENT_URI,
                 PureMadridDbHelper.getAllColumns(),
-                null,
-                null,
+                PureMadridContract.PollutionEntry.COLUMN_PARTICLE + " = ? ",
+                new String[]{Compuesto.NO2.name()},
                 PureMadridContract.PollutionEntry.COLUMN_DATE + " DESC LIMIT 1");
     }
 

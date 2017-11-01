@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.google.gson.Gson;
 import com.puremadrid.api.pureMadridApi.model.ApiMedicion;
 import com.puremadrid.api.pureMadridApi.model.JsonMap;
+import com.puremadrid.core.model.Compuesto;
 import com.puremadrid.core.model.Station;
 import com.puremadrid.core.utils.GlobalUtils;
 
@@ -38,7 +39,7 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "pollution.db";
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     public static String ESTACION_PREFIX = "estacion_";
 
     PureMadridDbHelper(Context context) {
@@ -58,8 +59,9 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
                 PureMadridContract.PollutionEntry.COLUMN_SCENARIO_MANUAL_TOMORROW + " TEXT NOT NULL, " +
                 PureMadridContract.PollutionEntry.COLUMN_SCENARIO_TOMORROW + " TEXT NOT NULL, " +
                 PureMadridContract.PollutionEntry.COLUMN_SCENARIO_TODAY    + " TEXT NOT NULL, " +
-                PureMadridContract.PollutionEntry.COLUMN_DATE    + " TEXT NOT NULL UNIQUE " +
+                PureMadridContract.PollutionEntry.COLUMN_DATE    + " TEXT NOT NULL " +
                 createStationColumns() +
+                ", UNIQUE ( " + PureMadridContract.PollutionEntry.COLUMN_DATE + " , " + PureMadridContract.PollutionEntry.COLUMN_PARTICLE + " ) ON CONFLICT REPLACE" +
                 ");";
 
         db.execSQL(CREATE_TABLE);
@@ -69,7 +71,7 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
         String result = "";
         Station[] stations = new Gson().fromJson(GlobalUtils.getString(GlobalUtils.getInputStream("stations.json")), Station[].class);
         for (Station station : stations){
-            result += ", " + PureMadridContract.PollutionEntry.COLUMN_BASE_STATION + String.format("%02d", station.getId())  + " INTEGER NOT NULL";
+            result += ", " + PureMadridContract.PollutionEntry.COLUMN_BASE_STATION + String.format("%02d", station.getId())  + " REAL NOT NULL";
         }
         return result;
     }
@@ -89,6 +91,35 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
             return;
         }
 
+        for (Compuesto compuesto : Compuesto.measuredCompuestos()) {
+
+            ContentValues contentValues = createContentValuesBasics(result);
+            JsonMap valuesMap = getCompuesto(compuesto, result);
+
+            //Stations
+            Station[] stations = new Gson().fromJson(GlobalUtils.getString(GlobalUtils.getInputStream("stations.json")), Station[].class);
+            for (Station station : stations) {
+                String stationId = PureMadridDbHelper.ESTACION_PREFIX + String.format("%02d", station.getId());
+                Object valueObject = valuesMap.get(stationId);
+                if (valueObject == null) {
+                    contentValues.put(PureMadridContract.PollutionEntry.COLUMN_BASE_STATION + String.format("%02d", station.getId()), -1);
+                } else if (valueObject instanceof BigDecimal) {
+                    BigDecimal bigDecimal = (BigDecimal) valueObject;
+                    contentValues.put(PureMadridContract.PollutionEntry.COLUMN_BASE_STATION + String.format("%02d", station.getId()), bigDecimal.doubleValue());
+                } else {
+                    contentValues.put(PureMadridContract.PollutionEntry.COLUMN_BASE_STATION + String.format("%02d", station.getId()), -1);
+                }
+            }
+
+            contentValues.put(PureMadridContract.PollutionEntry.COLUMN_PARTICLE, compuesto.name());
+
+            // Insert
+            context.getContentResolver().insert(PureMadridContract.PollutionEntry.CONTENT_URI, contentValues);
+
+        }
+    }
+
+    private static ContentValues createContentValuesBasics(ApiMedicion result) {
         // If there is a result
         ContentValues contentValues = new ContentValues();
         contentValues.put(PureMadridContract.PollutionEntry.COLUMN_AVISO_LEVEL_NOW, result.getAviso());
@@ -109,35 +140,28 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
         String dateStr = formatter.format(calendar.getTime());
         // Put data
         contentValues.put(PureMadridContract.PollutionEntry.COLUMN_DATE, dateStr);
+        return contentValues;
+    }
 
-        //Stations
-        Station[] stations = new Gson().fromJson(GlobalUtils.getString(GlobalUtils.getInputStream("stations.json")), Station[].class);
-        for (Station station : stations){
-            String stationId = PureMadridDbHelper.ESTACION_PREFIX + String.format("%02d", station.getId());
-            Object valueObject = result.getNo2().get(stationId);
-            int stationValue;
-            if (valueObject == null) {
-                stationValue = -1;
-            } else if (valueObject instanceof BigDecimal){
-                stationValue = ((BigDecimal) valueObject).intValueExact();
-            } else {
-                stationValue = (int) valueObject;
-            }
-            contentValues.put(PureMadridContract.PollutionEntry.COLUMN_BASE_STATION + String.format("%02d", station.getId()), stationValue);
+    private static JsonMap getCompuesto(Compuesto compuesto, ApiMedicion medicion) {
+        switch (compuesto){
+            case CO: return medicion.getCoValues();
+            case NO2: return medicion.getNo2();
+            case SO2: return medicion.getSo2values();
+            case O3: return medicion.getO3values();
+            case TOL: return medicion.getTolValues();
+            case BEN: return medicion.getBenValues();
+            case PM2_5: return medicion.getPm25values();
+            case PM10: return medicion.getPm10values();
         }
-
-        String particle = "NO2";
-        contentValues.put(PureMadridContract.PollutionEntry.COLUMN_PARTICLE, particle);
-
-        // Delete
-        context.getContentResolver().insert(PureMadridContract.PollutionEntry.CONTENT_URI, contentValues);
+        return null;
     }
 
     public static ApiMedicion getLastMeasureNO2(Context context){
         Cursor cursor = context.getContentResolver().query(PureMadridContract.PollutionEntry.CONTENT_URI,
                 PureMadridDbHelper.getAllColumns(),
                 PureMadridContract.PollutionEntry.COLUMN_PARTICLE + " =?",
-                new String[]{"NO2"},
+                new String[]{Compuesto.NO2.name()},
                 PureMadridContract.PollutionEntry.COLUMN_DATE + " DESC LIMIT 1");
 
         ApiMedicion medicion = null;
@@ -183,8 +207,8 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
     public static void updateLastMeasure(Context context, ApiMedicion newMedicion){
         Cursor cursor = context.getContentResolver().query(PureMadridContract.PollutionEntry.CONTENT_URI,
                 PureMadridDbHelper.getAllColumns(),
-                null,
-                null,
+                PureMadridContract.PollutionEntry.COLUMN_PARTICLE + " = ?",
+                new String[]{Compuesto.NO2.name()},
                 PureMadridContract.PollutionEntry.COLUMN_DATE + " DESC LIMIT 1");
 
         if (cursor.moveToFirst()) {
