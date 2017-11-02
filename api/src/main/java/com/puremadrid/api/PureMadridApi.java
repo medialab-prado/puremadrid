@@ -124,7 +124,7 @@ public class PureMadridApi {
         if (date.getTime() < 1505341800L * 1000){
             date.setTime(date.getTime() - 3600L * 1000);
         }
-        date.setTime(date.getTime() + 100L);
+        date.setTime(date.getTime());
 
         calendar.setTime(date);
         calendar.setTimeZone(TimeZone.getTimeZone("CET"));
@@ -138,35 +138,41 @@ public class PureMadridApi {
         // Query
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery pq = datastore.prepare(query);
-        // Get results
-        List<Entity> resultList = pq.asList(FetchOptions.Builder.withLimit(1));
-        if (resultList.size() == 1) {
+        List<Entity> resultList = pq.asList(FetchOptions.Builder.withDefaults());
 
-            mLogger.info("Found last value");
-            Entity entity = resultList.get(0);
+        ApiMedicion medicion = new Medicion(MainServlet.isPureMadrid());
+        for (Entity entity : resultList){
 
             Map<String, Object> properties = entity.getProperties();
             Map<String, Object> mapMeditions = new HashMap<>();
 
+            String propertyCompuesto = (String) entity.getProperty(PROPERTY_COMPUESTO);
+            Compuesto compuesto = Compuesto.withName(propertyCompuesto);
+
+            medicion.setMeasuredAt((Date) entity.getProperty(PROPERTY_MEASURE_DATE));
+            medicion.setSavedAtHour((Date) entity.getProperty(PROPERTY_SAVED_AT));
+            if (entity.getProperty(PROPERTY_COMPUESTO).equals(Compuesto.NO2)){
+                medicion.setAviso((String) entity.getProperty(PROPERTY_AVISO));
+                medicion.setAvisoState((String) entity.getProperty(PROPERTY_AVISO_STATE));
+                medicion.setAvisoMaxToday((String) entity.getProperty(PREPERTY_AVISO_MAX_TODAY));
+                medicion.setEscenarioStateToday((String) entity.getProperty(PROPERTY_ESCENARIO_STATE_TODAY));
+                medicion.setEscenarioStateTomorrow((String)  entity.getProperty(PROPERTY_ESCENARIO_STATE_TOMORROW));
+            }
+
             for (Map.Entry<String, Object> entry : properties.entrySet()) {
                 if(entry.getKey().contains(PROPERTY_ESTACION_BEGINS)){
                     try {
-                        mapMeditions.put(entry.getKey(), ((Long) entry.getValue()).intValue());
+                        mapMeditions.put(entry.getKey(), parseValue(entry.getValue()));
                     } catch (Exception e){
                         mLogger.warning("Error parsing data from Datastore: " + entry.getValue());
                     }
                 }
             }
-            ApiMedicion medicion = new Medicion((Date) entity.getProperty(PROPERTY_MEASURE_DATE), (String) entity.getProperty(PROPERTY_AVISO), (String) entity.getProperty(PROPERTY_AVISO_STATE), (String) entity.getProperty(PREPERTY_AVISO_MAX_TODAY), (String) entity.getProperty(PROPERTY_ESCENARIO_STATE_TODAY), (String) entity.getProperty(PROPERTY_ESCENARIO_STATE_TOMORROW), (String) entity.getProperty(PROPERTY_ESCENARIO_STATE_TOMORROW_MANUAL) ,MainServlet.isPureMadrid(),mapMeditions);
+            medicion.put(compuesto,mapMeditions);
 
-            mLogger.info("Returning One Medicion");
-
-            return medicion;
-        } else {
-            // No hay datos
-            mLogger.severe("This is weird, there are no results");
-            return null;
         }
+
+        return medicion;
     }
 
 }
