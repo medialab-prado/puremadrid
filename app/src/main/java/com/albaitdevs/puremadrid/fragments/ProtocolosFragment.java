@@ -14,8 +14,6 @@ import com.albaitdevs.puremadrid.activities.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.albaitdevs.puremadrid.activities.MainActivity.LOADER_LAST_MEASURE;
-
 public class ProtocolosFragment extends Fragment {
 
     @BindView(R.id.avisos_explanation) TextView avisosExplanation;
@@ -67,12 +65,6 @@ public class ProtocolosFragment extends Fragment {
         escenariosExplanation.setText(escenariosText);
 
         return view;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        getLoaderManager().destroyLoader(LOADER_LAST_MEASURE);
     }
 
 }

@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static com.albaitdevs.puremadrid.data.PureMadridContract.PollutionEntry.COLUMN_AVISO_LEVEL_NOW;
 import static com.albaitdevs.puremadrid.data.PureMadridContract.PollutionEntry.COLUMN_AVISO_MAX_LEVEL_TODAY;
@@ -35,6 +36,8 @@ import static com.albaitdevs.puremadrid.data.PureMadridContract.PollutionEntry.C
 
 public class DataBaseLoader implements LoaderManager.LoaderCallbacks<Cursor>{
 
+    public static final int LOADER_LAST_MEASURE = 123;
+
     private Activity mActivity;
     private DataBaseLoaderCallbacks mCallbacks;
 
@@ -48,38 +51,58 @@ public class DataBaseLoader implements LoaderManager.LoaderCallbacks<Cursor>{
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
 
-        return new CursorLoader(mActivity,
-                PureMadridContract.PollutionEntry.CONTENT_URI,
-                PureMadridDbHelper.getAllColumns(),
-                PureMadridContract.PollutionEntry.COLUMN_PARTICLE + " = ? ",
-                new String[]{Compuesto.NO2.name()},
-                PureMadridContract.PollutionEntry.COLUMN_DATE + " DESC LIMIT 1");
+        if (loaderId == LOADER_LAST_MEASURE) {
+
+            ApiMedicion lastMeasure = PureMadridDbHelper.getLastMeasureNO2(mActivity);
+            if (lastMeasure == null){
+                mCallbacks.onDBFinished(null);
+                return null;
+            }
+
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("CET"));
+            calendar.setTimeInMillis(lastMeasure.getMeasuredAt());
+            SimpleDateFormat formatter = new SimpleDateFormat(PureMadridDbHelper.databaseDateFormat); //Or whatever format fits best your needs.
+            String dateStr = formatter.format(calendar.getTime());
+
+            return new CursorLoader(mActivity,
+                    PureMadridContract.PollutionEntry.CONTENT_URI,
+                    PureMadridDbHelper.getAllColumns(),
+                    PureMadridContract.PollutionEntry.COLUMN_DATE + " = ? ",
+                    new String[]{dateStr},
+                    null);
+
+
+        } else {
+            mCallbacks.onDBFinished(null);
+            return null;
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        ApiMedicion medicion = null;
-        if (cursor.moveToFirst()){
-            medicion = new ApiMedicion();
-            medicion.setAviso(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_LEVEL_NOW)));
-            medicion.setAvisoMaxToday(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_MAX_LEVEL_TODAY)));
-            medicion.setAvisoState(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_STATE)));
-            medicion.setEscenarioManualTomorrow(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_MANUAL_TOMORROW)));
-            medicion.setEscenarioStateTomorrow(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_TOMORROW)));
-            medicion.setEscenarioStateToday(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_TODAY)));
+        ApiMedicion medicion = new ApiMedicion();
 
+        while (cursor.moveToNext()){
+
+            Compuesto compuesto = Compuesto.withName(cursor.getString(cursor.getColumnIndex(COLUMN_PARTICLE)));
+
+            if (compuesto == Compuesto.NO2) {
+                medicion.setAviso(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_LEVEL_NOW)));
+                medicion.setAvisoMaxToday(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_MAX_LEVEL_TODAY)));
+                medicion.setAvisoState(cursor.getString(cursor.getColumnIndex(COLUMN_AVISO_STATE)));
+                medicion.setEscenarioManualTomorrow(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_MANUAL_TOMORROW)));
+                medicion.setEscenarioStateTomorrow(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_TOMORROW)));
+                medicion.setEscenarioStateToday(cursor.getString(cursor.getColumnIndex(COLUMN_SCENARIO_TODAY)));
+            }
             // Date
             String dateString = cursor.getString(cursor.getColumnIndex(COLUMN_DATE));
             SimpleDateFormat formatter = new SimpleDateFormat(PureMadridDbHelper.databaseDateFormat);
-            Date date = null;
-
             try {
-                date = formatter.parse(dateString);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(date.getTime());
+                Date date = formatter.parse(dateString);
+                medicion.setMeasuredAt(date.getTime());
             } catch (ParseException e) {
 
             }
@@ -89,11 +112,11 @@ public class DataBaseLoader implements LoaderManager.LoaderCallbacks<Cursor>{
             Station[] stations = new Gson().fromJson(GlobalUtils.getString(GlobalUtils.getInputStream("stations.json")), Station[].class);
             for (Station station : stations){
                 String stationId = COLUMN_BASE_STATION + String.format("%02d", station.getId());
-                int value = cursor.getInt(cursor.getColumnIndex(stationId));
+                double value = cursor.getDouble(cursor.getColumnIndex(stationId));
                 valuesMap.put(stationId,value);
             }
 
-            switch (Compuesto.withName(cursor.getString(cursor.getColumnIndex(COLUMN_PARTICLE)))){
+            switch (compuesto){
                 case NO2: medicion.setNo2(valuesMap); break;
                 case CO: medicion.setCoValues(valuesMap); break;
                 case SO2: medicion.setSo2values(valuesMap); break;

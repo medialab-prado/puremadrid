@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.albaitdevs.puremadrid.R;
 import com.albaitdevs.puremadrid.activities.MainActivity;
@@ -19,7 +18,7 @@ import com.puremadrid.api.pureMadridApi.model.ApiMedicion;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.albaitdevs.puremadrid.activities.MainActivity.LOADER_LAST_MEASURE;
+import static com.albaitdevs.puremadrid.data.DataBaseLoader.LOADER_LAST_MEASURE;
 
 public class MainFragment extends Fragment implements DataBaseLoader.DataBaseLoaderCallbacks {
 

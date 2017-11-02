@@ -82,7 +82,6 @@
     <string name="no_data_title">No hay datos</string>
     <string name="no_data_content">Conéctate a internet para empezar a recibir información</string>
     <string name="retry">Reintentar</string>
-    <string name="particle_no2">NO2</string>
     <string name="no_data_for_date">No hay datos para la fecha seleccionada</string>
     <string name="loading">Cargando</string>
     <string name="add_widget">Add widget</string>

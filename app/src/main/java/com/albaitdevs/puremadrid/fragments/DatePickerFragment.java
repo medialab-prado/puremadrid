@@ -135,7 +135,7 @@ public class DatePickerFragment extends DialogFragment
         selectedCalendar.set(Calendar.MONTH,month);
         selectedCalendar.set(Calendar.DAY_OF_MONTH,day);
         selectedCalendar.set(Calendar.HOUR_OF_DAY,hour);
-        selectedCalendar.set(Calendar.MINUTE,1);
+        selectedCalendar.set(Calendar.MINUTE,0);
         selectedCalendar.set(Calendar.SECOND,0);
         selectedCalendar.set(Calendar.MILLISECOND,0);
 

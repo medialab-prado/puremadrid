@@ -63,6 +63,7 @@ import com.puremadrid.core.model.ApiResponse.NotificationData;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.albaitdevs.puremadrid.data.DataBaseLoader.LOADER_LAST_MEASURE;
 import static com.puremadrid.core.utils.GlobalUtils.getJsonFromUrl;
 
 public class MainActivity extends Activity implements NavigationView.OnNavigationItemSelectedListener, GetLastStatusAsync.ApiListener, DataBaseLoader.DataBaseLoaderCallbacks {
@@ -82,7 +83,6 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
     public static final int POSITION_INFO = 5;
     public static final int POSITION_FEEDBACK = 6;
 
-    public static final int LOADER_LAST_MEASURE = 123;
     public static final String KEY_OPENED_FROM_NOTIFICATION = "opened_from_noti";
     public static final String KEY_OPENED_FROM_WIDGET = "opened_from_widget";
 

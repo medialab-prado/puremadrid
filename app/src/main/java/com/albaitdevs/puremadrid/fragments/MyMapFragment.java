@@ -56,6 +56,8 @@ import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.puremadrid.api.pureMadridApi.model.ApiMedicion;
+import com.puremadrid.api.pureMadridApi.model.JsonMap;
+import com.puremadrid.core.model.Compuesto;
 import com.puremadrid.core.model.Station;
 import com.puremadrid.core.utils.GlobalUtils;
 
@@ -67,7 +69,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.albaitdevs.puremadrid.activities.MainActivity.LOADER_LAST_MEASURE;
+import static com.albaitdevs.puremadrid.data.DataBaseLoader.LOADER_LAST_MEASURE;
+import static com.puremadrid.core.model.Compuesto.*;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMyLocationButtonClickListener, GetLastStatusAsync.ApiListener, DatePickerFragment.OnDateTimeSetListener, DataBaseLoader.DataBaseLoaderCallbacks {
 
@@ -299,13 +302,15 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
             list.add(latLng);
             //
             Object valueObject = currentPollution.getNo2().get(stationId);
-            float stationValue;
+            double stationValue;
             if (valueObject == null) {
                 stationValue = 0;
             } else if (valueObject instanceof BigDecimal){
-                stationValue = ((BigDecimal) valueObject).intValueExact();
+                stationValue = ((BigDecimal) valueObject).doubleValue();
+            } else if (valueObject instanceof Double){
+                stationValue = (double) valueObject;
             } else {
-                stationValue = (int) valueObject;
+                stationValue = -1;
             }
             if (stationValue < 0){
                 stationValue = 0;
@@ -347,31 +352,35 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
 
     private void loadMarkers() {
         Station[] stations = new Gson().fromJson(GlobalUtils.getString(GlobalUtils.getInputStream("stations.json")), Station[].class);
-        for (Station station : stations){
-            LatLng latLng = new LatLng(station.getLatitud_decimal(),station.getLongitud_decimal());
-            String snippet = getString(R.string.no_data_title);
+        for (Station station : stations) {
+            LatLng latLng = new LatLng(station.getLatitud_decimal(), station.getLongitud_decimal());
+            String snippet = "";
             BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
-            if (currentPollution != null){
+            if (currentPollution != null) {
                 String stationId = PureMadridContract.PollutionEntry.COLUMN_BASE_STATION + String.format("%02d", station.getId());
-                Object valueObject = currentPollution.getNo2().get(stationId);
-                int stationValue;
-                if (valueObject == null) {
-                    stationValue = -1;
-                } else if (valueObject instanceof BigDecimal){
-                    stationValue = ((BigDecimal) valueObject).intValueExact();
-                } else {
-                    stationValue = (int) valueObject;
+
+                double no2Value = getValues(NO2,stationId);
+                if (no2Value > 0) {
+                    snippet += NO2.name() + ": " + no2Value + " µg/m3";
                 }
-                snippet = getString(R.string.particle_no2) + ": " + stationValue;
+                snippet += addStringValue(CO,stationId);
+                snippet += addStringValue(O3,stationId);
+                snippet += addStringValue(SO2,stationId);
+                snippet += addStringValue(PM2_5,stationId);
+                snippet += addStringValue(PM10,stationId);
+                snippet += addStringValue(BEN,stationId);
+                snippet += addStringValue(TOL,stationId);
+
                 //
-                if (stationValue > 400){
+                if (no2Value > 400) {
                     icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
-                } else if (stationValue > 200){
+                } else if (no2Value > 200) {
                     icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-                } else if (stationValue > 150){
+                } else if (no2Value > 150) {
                     icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW);
-                } else if (stationValue < 0){
-                    snippet = getString(R.string.particle_no2) + ": " + getString(R.string.no_data_title);
+                }
+                if (snippet.equals("")) {
+                    snippet = getString(R.string.no_data_title);
                 }
 
             }
@@ -382,6 +391,18 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
                             .snippet(snippet)
                             .position(latLng));
         }
+    }
+
+    private String addStringValue(Compuesto compuesto, String stationId) {
+        double value = getValues(compuesto, stationId);
+        String unit = "µg/m3";
+        if (compuesto == CO){
+            unit = "mg/m3";
+        }
+        if (value > 0) {
+            return "\n" + compuesto.name() + ": " + value + " " + unit;
+        }
+        return "";
     }
 
     /**
@@ -607,6 +628,34 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
             loadMarkers();
         }
 
+    }
+
+    public double getValues(Compuesto compuesto, String stationId) {
+        JsonMap values;
+        switch (compuesto){
+            case NO2: values = currentPollution.getNo2(); break;
+            case CO: values = currentPollution.getCoValues(); break;
+            case O3: values = currentPollution.getO3values(); break;
+            case BEN: values = currentPollution.getBenValues(); break;
+            case TOL: values = currentPollution.getTolValues(); break;
+            case SO2: values = currentPollution.getSo2values(); break;
+            case PM2_5: values = currentPollution.getPm25values(); break;
+            case PM10: values = currentPollution.getPm10values(); break;
+            default: return -1;
+        }
+        // Get value from station
+        Object valueObject = values.get(stationId);
+        double stationValue;
+        if (valueObject == null) {
+            stationValue = -1;
+        } else if (valueObject instanceof BigDecimal){
+            stationValue = ((BigDecimal) valueObject).doubleValue();
+        } else if (valueObject instanceof Double){
+            stationValue = (Double) valueObject;
+        } else {
+            stationValue = (int) valueObject;
+        }
+        return stationValue;
     }
 
     /**
