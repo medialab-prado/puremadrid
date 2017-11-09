@@ -55,10 +55,10 @@ import java.util.Date;
 
     @Override
     protected ApiMedicion doInBackground(Object... params) {
-        ApiMedicion result = getLastStatusRequest();
+        ApiMedicion result = getLastStatusRequest(isFromBackgound);
         while (result == null && isFromBackgound && retries < MAX_RETRIES){
             retries++;
-            result = getLastStatusRequest();
+            result = getLastStatusRequest(isFromBackgound);
         }
 
         if (result != null) {
@@ -77,7 +77,7 @@ import java.util.Date;
         return result;
     }
 
-     private ApiMedicion getLastStatusRequest() {
+     private ApiMedicion getLastStatusRequest(boolean isFromBackgound) {
          ApiMedicion result = null;
          try {
              if (myApiService == null) {  // Only do this once
