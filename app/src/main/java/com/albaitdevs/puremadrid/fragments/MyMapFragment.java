@@ -301,6 +301,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
             LatLng latLng = new LatLng(station.getLatitud_decimal(), station.getLongitud_decimal());
             list.add(latLng);
             //
+            if (currentPollution == null){
+                return;
+            }
+
             Object valueObject = currentPollution.getNo2().get(stationId);
             double stationValue;
             if (valueObject == null) {
