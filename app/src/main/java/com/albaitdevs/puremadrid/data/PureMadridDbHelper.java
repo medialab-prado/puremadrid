@@ -95,6 +95,9 @@ public class PureMadridDbHelper extends SQLiteOpenHelper {
 
             ContentValues contentValues = createContentValuesBasics(result);
             JsonMap valuesMap = getCompuesto(compuesto, result);
+            if (valuesMap == null){
+                continue;
+            }
 
             //Stations
             Station[] stations = new Gson().fromJson(GlobalUtils.getString(GlobalUtils.getInputStream("stations.json")), Station[].class);

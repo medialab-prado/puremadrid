@@ -648,6 +648,9 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, View.
             default: return -1;
         }
         // Get value from station
+        if (values == null){
+            return -1;
+        }
         Object valueObject = values.get(stationId);
         double stationValue;
         if (valueObject == null) {
