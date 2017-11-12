@@ -296,22 +296,12 @@ public class GetNewData extends MainServlet {
     }
 
     private Date getLastSavedTime() {
-        // Poner Key estacion + hora_muestra
-        Calendar calendarTwoAgo = Calendar.getInstance(TimeZone.getTimeZone("CET"));
-        calendarTwoAgo.add(Calendar.DATE, -2);
-        Date dateTwoAgo = calendarTwoAgo.getTime();
-
         // Prepare
-        Query.Filter keyFilter = new Query.FilterPredicate(PROPERTY_MEASURE_DATE, Query.FilterOperator.GREATER_THAN, dateTwoAgo);
         Query.Filter no2Filter = new Query.FilterPredicate(PROPERTY_COMPUESTO, Query.FilterOperator.EQUAL, NO2.name());
-        List<Query.Filter> filterList = new ArrayList<>();
-        filterList.add(keyFilter);
-        filterList.add(no2Filter);
-        Query.Filter filter = new Query.CompositeFilter(Query.CompositeFilterOperator.AND, filterList);
         Query query = new Query(ENTITY_TYPE_MEDIDAS)
-                .setFilter(filter)
-                .addSort(PROPERTY_MEASURE_DATE
-                        , Query.SortDirection.DESCENDING);
+            .setFilter(no2Filter)
+            .addSort(PROPERTY_MEASURE_DATE, Query.SortDirection.DESCENDING);
+
         // Query
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery pq = datastore.prepare(query);
