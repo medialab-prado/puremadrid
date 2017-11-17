@@ -93,7 +93,7 @@ public class PureMadridApi {
 
             medicion.setMeasuredAt((Date) entity.getProperty(PROPERTY_MEASURE_DATE));
             medicion.setSavedAtHour((Date) entity.getProperty(PROPERTY_SAVED_AT));
-            if (entity.getProperty(PROPERTY_COMPUESTO).equals(Compuesto.NO2)){
+            if (((String) entity.getProperty("Compuesto")).equals(Compuesto.NO2.name())){
                 medicion.setAviso((String) entity.getProperty(PROPERTY_AVISO));
                 medicion.setAvisoState((String) entity.getProperty(PROPERTY_AVISO_STATE));
                 medicion.setAvisoMaxToday((String) entity.getProperty(PREPERTY_AVISO_MAX_TODAY));
