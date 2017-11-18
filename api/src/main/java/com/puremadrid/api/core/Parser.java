@@ -19,7 +19,6 @@ package com.puremadrid.api.core;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.gson.Gson;
-import com.puremadrid.api.utils.EmailUtils;
 import com.puremadrid.core.model.Compuesto;
 import com.puremadrid.core.model.Medicion;
 import com.puremadrid.core.model.Station;
@@ -271,13 +270,6 @@ public class Parser {
             medicion.put(PM2_5,formatValues(time,tablePM25));
             medicion.put(TOL,formatValues(time,tableTOL));
 
-            Map<String, String> emailMap = medicion.computeAlertas();
-            if (emailMap.containsKey("subject")) {
-                mLogger.info("Must send email with subject: " + emailMap.get("subject"));
-            }
-            if (emailMap != null && emailMap.size() >= 0 && emailMap.containsKey("title")){
-                EmailUtils.sendEmail(emailMap.get("title"),emailMap.get("subject"));
-            }
             //
             mediciones.add(medicion);
             savedTime.add(Calendar.MILLISECOND,1);

@@ -22,17 +22,10 @@ package com.puremadrid.api;
 
 public class ApiKeys {
 
-    public static String GCM_API_KEY_PROD = "";
-    public static String GCM_API_KEY_TEST = "";
+    public static String GCM_API_KEY_PROD = "key=AAAAHEM5-4Q:APA91bFIGAjf5i2fUCb3Q8Z3TOTtBzcje6X2U1geIoa3wdkxM7fJNCFDIii5aPlrQxjhBG52I0NU5pETmPkGBdpZyhtmsh1M09F1X5hggRZFr_NX3LEFeVEoBw7Hf9IemzWdxFIE-T37";
     public static String TOPIC_SCENARIO = "/topics/scenario";
 
     // API
-    public static String ACCESS_TOKEN = "";
     public static String ACCES_TOKEN_USERPASS = "Basic ZGF0YXRvbjpkYXRhdG9u";
-
-    // Email
-    public static String EMAIL_SENDER = "";
-    public static String EMAIL_RECIPIENT = "";
-
 
 }

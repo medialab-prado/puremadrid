@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import static com.puremadrid.api.ApiKeys.GCM_API_KEY_PROD;
-import static com.puremadrid.api.ApiKeys.GCM_API_KEY_TEST;
 import static com.puremadrid.api.ApiKeys.TOPIC_SCENARIO;
 
 /**
@@ -43,13 +42,9 @@ public class NotificationUtils {
         String basicAuth = null;
         String to = null;
 
-        if (GetNewData.isPureMadrid()){
-            basicAuth = GCM_API_KEY_PROD;
-            to = TOPIC_SCENARIO;
-        } else {
-            basicAuth = GCM_API_KEY_TEST;
-            to = TOPIC_SCENARIO;
-        }
+        basicAuth = GCM_API_KEY_PROD;
+        to = TOPIC_SCENARIO;
+
         // Si STATE es alguno de debug, es numero de estaciones en warning
         // Si es REAL, entonces es el nivel del escenario
 

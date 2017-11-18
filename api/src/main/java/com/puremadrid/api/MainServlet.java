@@ -104,7 +104,7 @@ public class MainServlet extends HttpServlet {
 
         if ((ipAddress.equals("0.1.0.1") && calledFromCron.equals("true"))
                 || (authorization != null
-                    && (authorization.equals(ACCESS_TOKEN) || authorization.equals(ACCES_TOKEN_USERPASS)))
+                    && (authorization.equals(ACCES_TOKEN_USERPASS)))
                 ){
             return true;
         } else {

@@ -36,7 +36,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.repackaged.com.google.datastore.v1.PropertyFilter;
 import com.puremadrid.api.MainServlet;
 import com.puremadrid.api.core.Parser;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -49,15 +48,10 @@ import com.google.appengine.api.datastore.Query;
 import com.puremadrid.core.model.ApiMedicion;
 import com.puremadrid.core.model.ApiResponse;
 import com.puremadrid.core.model.Compuesto;
-import com.puremadrid.core.model.Constants;
 import com.puremadrid.core.model.Medicion;
 import com.puremadrid.core.utils.GlobalUtils;
-import com.puremadrid.api.utils.EmailUtils;
-import com.puremadrid.api.utils.NotificationUtils;
 
 import static com.puremadrid.api.core.Parser.parseFromMissingDay;
-import static com.puremadrid.core.model.ApiMedicion.Escenario.*;
-import static com.puremadrid.core.model.ApiMedicion.Estado.*;
 import static com.puremadrid.core.model.Compuesto.NO2;
 import static com.puremadrid.core.utils.GlobalUtils.stringHour;
 
@@ -114,9 +108,6 @@ public class GetNewData extends MainServlet {
             return;
         } catch (SocketTimeoutException e) {
             mLogger.severe(ApiResponse.MESSAGE_TIMEOUT);
-            if (GetNewData.isPureMadrid()) {
-                EmailUtils.sendEmail("Horarios caido", "HORARIOS.TXT ESTA CAIDO");
-            }
             ApiResponse apiResponse = new ApiResponse(ApiResponse.HTTP_ERROR,ApiResponse.Errors.ERROR_TIMEOUT_IN_MEDIOAMBIENTE);
             String jsonInString = apiResponse.buildJson();
 
