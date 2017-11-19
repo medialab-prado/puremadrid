@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import static com.google.appengine.api.utils.SystemProperty.Environment.Value.Development;
 import static com.google.appengine.api.utils.SystemProperty.Environment.Value.Production;
 import static com.google.appengine.api.utils.SystemProperty.environment;
-import static com.puremadrid.api.ApiKeys.ACCESS_TOKEN;
 import static com.puremadrid.api.ApiKeys.ACCES_TOKEN_USERPASS;
 
 /**

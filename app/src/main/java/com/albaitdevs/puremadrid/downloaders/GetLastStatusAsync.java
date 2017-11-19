@@ -103,7 +103,7 @@ import java.util.Date;
                          // - 10.0.2.2 is localhost's IP address in Android emulator
                          // - turn off compression date running against local devappserver
                          // .setRootUrl("http://10.0.2.2:8080/_ah/api/")
-                         .setRootUrl(mContext.getString(R.string.pure_madrid_api_url))
+                         .setRootUrl(mContext.getString(R.string.your_api_url))
                          .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                              @Override
                              public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {

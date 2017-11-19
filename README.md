@@ -1,14 +1,3 @@
-Para que FCM y la conexión con Google App Engine funcionen correctamente, es necesario añadir un fichero google-services.json
-
-YOUR_API_KEY_MAPS_DEBUG
-YOUR_API_KEY_MAPS_RELEASE
-YOUR_SERVER_URL
-
-
-
-
-
-
 # Pure Madrid
 
 Este proyecto consiste en una aplicación desarrollada para la plataforma Android que permite a los ciudadanos de Madrid conocer toda la información relativa al aire de la ciudad, incluyendo las restricciones de tráfico aplicadas en cada momento.
@@ -33,7 +22,20 @@ Toda la información de esta aplicación es obtenida del Portal de datos abierto
 
 ## Documentación del proyecto
 
-La documentación se encuentra en [docs](docs/Pure Madrid Presentacion.pdf)
+La documentación se encuentra en [docs](docs/)
+
+
+## Claves necesarias:
+
+Para que FCM y la conexión con Google App Engine funcionen correctamente, es necesario añadir un fichero google-services.json de Firebase.
+Además, es necesario configurar los siguientes valores con los de nuestro servidor:
+
+your_key_google_maps
+your_api_url
+ACCES_TOKEN_USERPASS
+GCM_API_KEY_PROD
+
+Algunas de estas claves están preconfiguradas, y el proyecto correspondiente se cerrará una vez finalizado el Datatón.
 
 ## Capturas de pantalla
 

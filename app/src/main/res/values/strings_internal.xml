@@ -25,6 +25,6 @@
     <string name="url_boletin_diario">http://www.mambiente.munimadrid.es/datos_prevalidados/boletin_diario.pdf</string>
     <string name="url_official_docs">http://calidadaire.madrid.es/opencms/export/sites/default/calaire/Anexos/Nuevo_protocolo_NO2.pdf</string>
 
-    <string name="pure_madrid_api_url">https://pure-madrid-dataton.appspot.com/_ah/api/</string>
+    <string name="your_api_url">https://pure-madrid-dataton.appspot.com/_ah/api/</string>
 
 </resources>
