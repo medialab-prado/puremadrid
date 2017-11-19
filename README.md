@@ -4,6 +4,10 @@ Este proyecto consiste en una aplicación desarrollada para la plataforma Androi
 
 El propósito de esta app es mostrar el nivel de contaminación de la ciudad de Madrid en tiempo real y también toda la información correspondiente a los protocolos de contaminación mediante el envío de notificaciones. Los destinatarios de la app son los ciudadanos de Madrid y también aquellas personas que visiten la ciudad, aunque les será de más utilidad a todos aquellos que utilicen habitualmente el vehículo privado para desplazarse. 
 
+## Promotor
+
+* Javier Delgado Aylagas
+
 
 ## Funcionalidad
 
@@ -39,7 +43,7 @@ Algunas de estas claves están preconfiguradas, y el proyecto correspondiente se
 
 ## Capturas de pantalla
 
-![screen](../master/docs/Captura1.png)
+![screen](../docs/Captura1.png)
 ![screen](../master/docs/Captura2.png)
 ![screen](../master/docs/Captura3.png)
 ![screen](../master/docs/Captura4.png)
