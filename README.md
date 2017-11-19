@@ -43,12 +43,12 @@ Algunas de estas claves están preconfiguradas, y el proyecto correspondiente se
 
 ## Capturas de pantalla
 
-![screen](../docs/Captura1.png)
-![screen](../master/docs/Captura2.png)
-![screen](../master/docs/Captura3.png)
-![screen](../master/docs/Captura4.png)
-![screen](../master/docs/Captura5.png)
-![screen](../master/docs/Captura6.png)
-![screen](../master/docs/Captura7.png)
-![screen](../master/docs/Captura8.png)
+![screen](docs/Captura1.png)
+![screen](docs/Captura2.png)
+![screen](docs/Captura3.png)
+![screen](docs/Captura4.png)
+![screen](docs/Captura5.png)
+![screen](docs/Captura6.png)
+![screen](docs/Captura7.png)
+![screen](docs/Captura8.png)
 
