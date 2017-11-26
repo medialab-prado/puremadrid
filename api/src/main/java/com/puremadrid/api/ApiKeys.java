@@ -23,7 +23,7 @@ package com.puremadrid.api;
 public class ApiKeys {
 
     public static String GCM_API_KEY_PROD = "key=AAAAHEM5-4Q:APA91bFIGAjf5i2fUCb3Q8Z3TOTtBzcje6X2U1geIoa3wdkxM7fJNCFDIii5aPlrQxjhBG52I0NU5pETmPkGBdpZyhtmsh1M09F1X5hggRZFr_NX3LEFeVEoBw7Hf9IemzWdxFIE-T37";
-    public static String TOPIC_SCENARIO = "/topics/scenario";
+    public static String TOPIC_SCENARIO = "/topics/scenarios";
 
     // API
     public static String ACCES_TOKEN_USERPASS = "Basic ZGF0YXRvbjpkYXRhdG9u";

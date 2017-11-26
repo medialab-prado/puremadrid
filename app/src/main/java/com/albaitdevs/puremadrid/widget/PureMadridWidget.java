@@ -41,6 +41,11 @@ public class PureMadridWidget extends AppWidgetProvider {
         ApiMedicion currentPollution = PureMadridDbHelper.getLastMeasureNO2(context);
         com.puremadrid.core.model.ApiMedicion.Escenario esceneToday = com.puremadrid.core.model.ApiMedicion.Escenario.valueOf(currentPollution.getEscenarioStateToday());
         com.puremadrid.core.model.ApiMedicion.Escenario esceneTomorrow = com.puremadrid.core.model.ApiMedicion.Escenario.valueOf(currentPollution.getEscenarioStateTomorrow());
+        if (currentPollution != null){
+            esceneToday = com.puremadrid.core.model.ApiMedicion.Escenario.valueOf(currentPollution.getEscenarioStateToday());
+            esceneTomorrow = com.puremadrid.core.model.ApiMedicion.Escenario.valueOf(currentPollution.getEscenarioStateTomorrow());
+        }
+
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.pure_madrid_widget);

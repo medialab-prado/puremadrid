@@ -45,9 +45,11 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
+import com.puremadrid.api.utils.NotificationUtils;
 import com.puremadrid.core.model.ApiMedicion;
 import com.puremadrid.core.model.ApiResponse;
 import com.puremadrid.core.model.Compuesto;
+import com.puremadrid.core.model.Constants;
 import com.puremadrid.core.model.Medicion;
 import com.puremadrid.core.utils.GlobalUtils;
 
@@ -167,13 +169,15 @@ public class GetNewData extends MainServlet {
         Collections.sort(formattedData);
         analyzing.addAll(formattedData);
 
-        for (int i=foundDbCount;i<analyzing.size();i++) {
+        String flag = Constants.FLAGS_NONE;
+        ApiMedicion.Escenario escenarioToday = Medicion.Escenario.NONE;
+        ApiMedicion.Escenario escenarioTomorrow = Medicion.Escenario.NONE;
+        for (int i = foundDbCount; i<analyzing.size(); i++) {
 
             Medicion currentMedicion = analyzing.get(i);
             Medicion prevMedicion = analyzing.get(i-1);
 
-            ApiMedicion.Escenario escenarioToday = Medicion.Escenario.NONE;
-            ApiMedicion.Escenario escenarioTomorrow = Medicion.Escenario.NONE;
+
 
             Calendar currentMedicionTime = Calendar.getInstance(TimeZone.getTimeZone("CET"));
             currentMedicionTime.setTimeInMillis(currentMedicion.getMeasuredAt());
@@ -181,6 +185,9 @@ public class GetNewData extends MainServlet {
             if (currentMedicionTime.get(Calendar.HOUR_OF_DAY) == HOUR_OF_REFERENCE) {
                 escenarioToday = Medicion.Escenario.valueOf(prevMedicion.getEscenarioStateTomorrow());
                 escenarioTomorrow = ApiMedicion.Escenario.NONE;
+                if (escenarioToday != ApiMedicion.Escenario.NONE){
+                    flag = Constants.FLAG_SET_ALWAYS_TODAY;
+                }
             } else {
                 escenarioToday = Medicion.Escenario.valueOf(prevMedicion.getEscenarioStateToday());
                 escenarioTomorrow = Medicion.Escenario.valueOf(prevMedicion.getEscenarioStateTomorrow());
@@ -192,6 +199,8 @@ public class GetNewData extends MainServlet {
             currentMedicion.setEscenarioStateToday(escenarioToday.name());
             currentMedicion.setEscenarioStateTomorrow(escenarioTomorrow.name());
         }
+
+        NotificationUtils.sendNotification(false, ApiMedicion.Estado.NONE.name(), ApiMedicion.Estado.NONE.name(), ApiMedicion.Estado.NONE.name(), escenarioToday.name(), escenarioTomorrow.name(), flag);
 
     }
 
