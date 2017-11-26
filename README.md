@@ -4,7 +4,7 @@ Este proyecto consiste en una aplicación desarrollada para la plataforma Androi
 
 El propósito de esta app es mostrar el nivel de contaminación de la ciudad de Madrid en tiempo real y también toda la información correspondiente a los protocolos de contaminación mediante el envío de notificaciones. Los destinatarios de la app son los ciudadanos de Madrid y también aquellas personas que visiten la ciudad, aunque les será de más utilidad a todos aquellos que utilicen habitualmente el vehículo privado para desplazarse. 
 
-![screen](docs/Captura8.png)
+![screen](docs/google-play-badge.png)
 
 La app está disponible en Google Play desde el mes de octubre para permitir que los ciudadanos la disfrutasen durante toda la temporada de contaminación elevada y puede obtenerse en el siguiente enlace:
 https://play.google.com/store/apps/details?id=com.albaitdevs.puremadrid
@@ -89,9 +89,3 @@ ACCES_TOKEN_USERPASS
 GCM_API_KEY_PROD
 
 Algunas de estas claves están preconfiguradas, y el proyecto de Google correspondiente se cerrará una vez finalizado el Datatón. Para mayor seguridad, se deben utilizar claves propias.
-
-
-
-
-![screen](docs/Captura6.png)
-
