@@ -1,0 +1,59 @@
+<!--
+  ~ Copyright (C) 2017 Javier Delgado Aylagas
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/drawer_estado"
+            android:checked="true"
+            android:icon="@drawable/menu_icon_status"
+            android:title="@string/menuitem_estado"/>
+
+        <item
+            android:id="@+id/drawer_mapa"
+            android:icon="@drawable/menu_icon_map"
+            android:title="@string/menuitem_mapa"/>
+
+        <item
+            android:id="@+id/drawer_prediction"
+            android:icon="@drawable/menu_icon_crystalball"
+            android:title="@string/menuitem_prediction"/>
+
+        <item
+            android:id="@+id/drawer_protocolos"
+            android:icon="@drawable/menu_icon_check"
+            android:title="@string/menuitem_protocolos"/>
+
+        <item
+            android:id="@+id/drawer_last_announcement"
+            android:icon="@drawable/menu_icon_warnings"
+            android:title="@string/menuitem_last_announcement"/>
+
+        <item
+            android:id="@+id/drawer_info"
+            android:icon="@drawable/menu_icon_info"
+            android:title="@string/menuitem_info"/>
+
+        <item
+            android:id="@+id/drawer_feedback"
+            android:icon="@drawable/menu_icon_message"
+            android:title="@string/menuitem_feedback"/>
+
+    </group>
+
+</menu>
