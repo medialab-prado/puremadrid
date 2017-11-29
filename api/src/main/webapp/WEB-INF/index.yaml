@@ -1,0 +1,9 @@
+indexes:
+
+- kind: Medidas
+  ancestor: no
+  properties:
+  - name: Compuesto
+    direction: asc
+  - name: Measure_date
+    direction: desc

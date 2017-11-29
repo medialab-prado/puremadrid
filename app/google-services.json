@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "121386957700",
+    "firebase_url": "https://pure-madrid-dataton.firebaseio.com",
+    "project_id": "pure-madrid-dataton",
+    "storage_bucket": "pure-madrid-dataton.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121386957700:android:4d49a8d2ab1e2afb",
+        "android_client_info": {
+          "package_name": "com.javierdelgado.puremadrid.dataton"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121386957700-u6uhecq6a2dgsq4333bdthq4l1v6g8fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_UCeRIesvlRMSN51ZBG_TGoQQ9oWfo78"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
