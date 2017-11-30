@@ -75,13 +75,13 @@ La información es almacenada cada hora en Google Datastore desde donde es acced
 
 Las principales peticiones que implementa la api son:
 
-* __getNewData__: Almacena la información generada desde la ultima petición hasta el momento actual. Además, en caso de que el fichero de datos en tiempo real esté caido, este método recuperará toda la información en cuanto vuelva a estar disponible, actualizando así toda la información generada desde la última vez que estuvo disponible. Este método es utilizado a través de un Cron que mantiene la información de la base datos cada hora. La única información que devuelve la llamada es si se ha actualizado algún dato o no. Esta llamada nunca se usa externamente. En el servidor de prueba desplegado para que pueda ser utilizado en el concurso se dispone de información de 8 contaminantes diferentes desde el 22 de Octubre de 2017. En caso de estar en un episodio de contaminación activo, envía notificaciones push a la app con el estado actual.
+* __getNewData__: Almacena la información generada desde la ultima petición hasta el momento actual. Además, en caso de que el fichero de datos en tiempo real esté caido, este método recuperará toda la información en cuanto vuelva a estar disponible, actualizando así toda la información generada desde la última vez que estuvo disponible. Este método es utilizado a través de un Cron que mantiene la información de la base datos cada hora. La única información que devuelve la llamada es si se ha actualizado algún dato o no. Esta llamada nunca se usa externamente. En el servidor de prueba desplegado para que pueda ser utilizado en el concurso se dispone de información de 8 contaminantes diferentes desde el 22 de Octubre de 2017. Este método gestiona de manera automática los avisos por contaminación y en caso de estar en un episodio de contaminación activo, envía notificaciones push a la app con el estado actual.
 
 * __getLastStatus__: Devuelve los datos de la última hora almacenada sobre todos los contaminantes medidos en el servidor. Utiliza un formato JSON que se puede ver en la siguiente imagen. Esta llamada se utiliza en el momento de abrir la app o el mapa para disponer de los datos más recientes disponibles.
 
 * __getStatusAt/[fecha_hora]__: Devuelve los datos de todos los contaminantes medidos en la hora seleccionada. Utiliza el mismo formato que se puede ver a continuación. Esta llamada se utiliza únicamente en el mapa al cambiar la fecha seleccionada.
 
-* __setManualEscenario__ y __setManualScenarioToday__: Permiten gestionar manualmente los avisos de restricciones de tráfico. Ambas envían una notificación push a la app utilizando Firebase.
+* __setManualScenario__ y __setManualScenarioToday__: Permiten gestionar manualmente los avisos de restricciones de tráfico. Ambas envían una notificación push a la app utilizando Firebase.
 
 ![screen](docs/api.png)
 
