@@ -12,6 +12,7 @@ Todo esto lo hacemos utilizando los datos de contaminación en tiempo real del P
 La app está disponible en Google Play desde el mes de octubre para permitir que los ciudadanos la disfrutasen durante toda la temporada de contaminación elevada y puede obtenerse en el siguiente enlace:
 
 ![screen](docs/google-play-badge.png)
+
 https://play.google.com/store/apps/details?id=com.albaitdevs.puremadrid
 
 Durante este periodo, la app ha sido instalada por más de 1000 ciudadanos que han recibido notificaciones automáticas durante los tres episodios de contaminación elevada que han tenido lugar esta temporada, siendo el más prolongado el de mediados de noviembre con una duración superior a una semana.
