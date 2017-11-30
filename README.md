@@ -1,18 +1,22 @@
+
+![screenscreen](docs/Screenshot_20171130-084253.png)
+
 # Pure Madrid
 
 Este proyecto consiste en una aplicación desarrollada para la plataforma Android que permite a los ciudadanos de Madrid conocer toda la información relativa al aire de la ciudad, incluyendo las restricciones de tráfico aplicadas en cada momento.
 
 El propósito de esta app es mostrar el nivel de contaminación de la ciudad de Madrid en tiempo real y también toda la información correspondiente a los protocolos de contaminación mediante el envío de notificaciones. Los destinatarios de la app son los ciudadanos de Madrid y también aquellas personas que visiten la ciudad, aunque les será de más utilidad a todos aquellos que utilicen habitualmente el vehículo privado para desplazarse. 
 
-![screen](docs/google-play-badge.png)
-
 La app está disponible en Google Play desde el mes de octubre para permitir que los ciudadanos la disfrutasen durante toda la temporada de contaminación elevada y puede obtenerse en el siguiente enlace:
 https://play.google.com/store/apps/details?id=com.albaitdevs.puremadrid
+
+![screen](docs/google-play-badge.png)
 
 Durante este periodo, la app ha sido instalada por más de 1000 ciudadanos que han recibido notificaciones automáticas durante los tres episodios de contaminación elevada que han tenido lugar esta temporada, siendo el más prolongado el de mediados de noviembre con una duración superior a una semana.
 
 Además, de entre todos los usuarios que han disfrutado de la app, más de 35 han valorado la aplicación con una nota media de 4,9 sobre 5 en Google Play
 
+![screen](docs/Screenshot_20171130-084103.png)
 
 ## Promotor
 
